@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, memo } from "react";
 import { useForm } from "react-hook-form";
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
@@ -25,6 +25,12 @@ function App() {
   const [categories, setCategories] = useState([]);
   const [list, setList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
+
+  // test useMemo
+  // const visibleTodos = useMemo(
+  //   () => filterTodos(todos, tab),
+  //   [todos, tab] // ...so as long as these dependencies don't change...
+  // );
 
   //react hook form
   const {
@@ -58,8 +64,8 @@ function App() {
   };
 
   const handleDelete = (id) => {
-    deleteProductById(id).then((data) => {
-      console.log(data);
+    deleteProductById(id).then(() => {
+      setList(list.filter((product) => product.id != id));
     });
   };
 
@@ -75,17 +81,34 @@ function App() {
   useEffect(() => {
     fetchProducts().then((data) => {
       setList(data);
-      setFilteredList(data);
     });
   }, []);
 
+  //test useMemo
+  useMemo(
+    () => {
+      if (filterCategory && filterCategory.length != 0) {
+        setFilteredList(
+          list.filter((item) => item.category === filterCategory)
+        );
+      } else {
+        setFilteredList(list);
+      }
+    },
+    [list, filterCategory] // ...so as long as these dependencies don't change...
+  );
+
   useEffect(() => {
-    if (filterCategory && filterCategory.length != 0) {
-      setFilteredList(list.filter((item) => item.category === filterCategory));
-    } else {
-      setFilteredList(list);
-    }
-  }, [filterCategory, list]);
+    console.log(list);
+    console.log(filteredList);
+  });
+  // useEffect(() => {
+  //   if (filterCategory && filterCategory.length != 0) {
+  //     setFilteredList(list.filter((item) => item.category === filterCategory));
+  //   } else {
+  //     setFilteredList(list);
+  //   }
+  // }, [filterCategory, list]);
 
   useEffect(() => {
     const tempCategories = [];
@@ -113,7 +136,10 @@ function App() {
     icon: React.createElement(icon),
     label: `nav ${index + 1}`,
   }));
-
+  // const filteredList = useMemo(
+  //   () => setFilteredList(list),
+  //   [todos, tab] // ...so as long as these dependencies don't change...
+  // );
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -169,6 +195,10 @@ function App() {
     },
   ];
 
+  const TableMemo = memo(function TableMemo({ columns, filteredList }) {
+    return <Table columns={columns} dataSource={filteredList} />;
+  });
+  // <Table columns={columns} dataSource={filteredList} />
   return (
     <>
       <Layout
@@ -287,7 +317,7 @@ function App() {
                   },
                 ]}
               />
-              <Table columns={columns} dataSource={filteredList} />
+              <TableMemo columns={columns} filteredList={filteredList} />
             </div>
           </Content>
           <Footer

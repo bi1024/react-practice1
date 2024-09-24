@@ -26,6 +26,9 @@ export const editProduct = async (product) => {
         console.log(product);
         const response = await axios.get(`http://localhost:3000/products/${product.id}`);
         response.data.title = product.title;
+        response.data.description = product.description;
+        response.data.category = product.category;
+        response.data.price = product.price;
         console.log(response.data);
         await axios.patch(`http://localhost:3000/products/${response.data.id}`, response.data)
         return response.data;
