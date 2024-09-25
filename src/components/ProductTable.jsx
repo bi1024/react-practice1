@@ -1,7 +1,15 @@
-import { Space, Table, Select } from "antd";
+import { Space, Table } from "antd";
 import { memo } from "react";
+import { PropTypes } from "prop-types";
+import { useEffect } from "react";
 
-function ProductTable({ data, handleDelete, handleEdit }) {
+// List = memo(function List({ items })
+const ProductTable = memo(function ProductTable({
+  data,
+  handleDelete,
+  handleEdit,
+}) {
+  useEffect(() => console.log("render table"));
   const columns = [
     {
       title: "id",
@@ -53,6 +61,12 @@ function ProductTable({ data, handleDelete, handleEdit }) {
     },
   ];
   return <Table columns={columns} dataSource={data} />;
-}
+});
 
 export default ProductTable;
+// let it be known prop types is only done to appease the eslint god
+ProductTable.propTypes = {
+  data: PropTypes.array,
+  handleDelete: PropTypes.func,
+  handleEdit: PropTypes.func,
+};

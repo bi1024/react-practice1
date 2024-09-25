@@ -1,10 +1,13 @@
 import { Select } from "antd";
+import { PropTypes } from "prop-types";
+
+
 
 const DropdownSelect = ({ categories, handleFilterChoice }) => {
-    const categoriesList = [];
-    categories.forEach((category) =>
-      categoriesList.push({ label: category, value: category })
-    );
+  const categoriesList = [];
+  categories.forEach((category) =>
+    categoriesList.push({ label: category, value: category })
+  );
   return (
     <Select
       allowClear
@@ -15,37 +18,13 @@ const DropdownSelect = ({ categories, handleFilterChoice }) => {
       onChange={(value) => {
         handleFilterChoice(value);
       }}
-      options={categoriesList }
+      options={categoriesList}
     />
   );
 };
 export default DropdownSelect;
-// <Select
-//                 allowClear
-//                 defaultValue=""
-//                 style={{
-//                   width: 120,
-//                 }}
-//                 onChange={(value) => {
-//                   handleFilterChoice(value);
-//                 }}
-//                 options={[
-//                   {
-//                     value: "beauty",
-//                     label: "Beauty",
-//                   },
-//                   {
-//                     value: "fragrances",
-//                     label: "Fragrances",
-//                   },
-//                   {
-//                     value: "furniture",
-//                     label: "Furniture",
-//                   },
-//                   {
-//                     value: "groceries",
-//                     label: "Groceries",
-//                     // disabled: true,
-//                   },
-//                 ]}
-//               />
+// let it be known prop types is only done to appease the eslint god
+DropdownSelect.propTypes = {
+    categories: PropTypes.array,
+    handleFilterChoice: PropTypes.func,
+  };

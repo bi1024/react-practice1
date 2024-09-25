@@ -1,8 +1,7 @@
-import { useState } from "react";
-// import { Form, Input, Button } from "antd";
-import { useEffect } from "react";
-
-const EditInput = ({ onSubmit, product }) => {
+import { useState, useEffect, forwardRef } from "react";
+import { PropTypes } from "prop-types";
+// = forwardRef((props, ref)
+const EditInput = forwardRef(({ onSubmit, product }, ref) => {
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -16,7 +15,8 @@ const EditInput = ({ onSubmit, product }) => {
     setPrice(product.price);
   }, [product]);
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     product.title = title;
     product.description = description;
     product.category = category;
@@ -27,8 +27,12 @@ const EditInput = ({ onSubmit, product }) => {
   return (
     // Em dùng html vì em tốn ~ hơn 1 tiếng vô form của ant design mà làm không được =)))
     <form onSubmit={handleSubmit}>
-      <input value={id}></input>
-      <input value={title} onChange={(e) => setTitle(e.target.value)}></input>
+      <input value={id} readOnly></input>
+      <input
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        ref={ref}
+      ></input>
       <input
         value={description}
         onChange={(e) => setDescription(e.target.value)}
@@ -41,6 +45,11 @@ const EditInput = ({ onSubmit, product }) => {
       <input type="submit" />
     </form>
   );
-};
-
+});
+EditInput.displayName = "EditInput"; //to follow eslint's rule
 export default EditInput;
+// let it be known prop types is only done to appease the eslint god
+EditInput.propTypes = {
+  onSubmit: PropTypes.func,
+  product: PropTypes.object,
+};

@@ -1,81 +1,66 @@
-import { useState, useEffect } from "react";
-import { fetchProducts, deleteProductById, editProduct } from "./services";
-import { Layout, theme } from "antd";
-const { Header, Content, Footer,  } = Layout;
+import { useState, useEffect, useMemo, useRef } from "react";
+import {
+  fetchProducts,
+  deleteProductById,
+  editProduct,
+} from "./services/services";
+import { Button, Layout, theme } from "antd";
+const { Header, Content, Footer } = Layout;
+
 import ProductTable from "./components/ProductTable";
 import DropdownSelect from "./components/DropdownSelect";
 import EditInput from "./components/EditInput";
 import ProductSider from "./components/ProductSider";
+import {
+  filterListByCategory,
+  getCategories,
+  updateLocalList,
+} from "./utils/productList";
+import { useCallback } from "react";
 
 function App() {
   const [filterCategory, setFilterCategory] = useState("");
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [list, setList] = useState([]);
-  const [filteredList, setFilteredList] = useState([]);
   const [editingProduct, setEditingProduct] = useState({});
-
-
-  const onSubmit = (data) => {
-    editProduct(data);
-    setList(
-      list.map((product) =>
-        product.id == data.id
-          ? {
-              ...product,
-              title: data.title,
-              description: data.description,
-              category: data.category,
-              price: data.price,
-            }
-          : product
-      )
-    );
-  };
-
-  const handleFilterChoice = (value) => {
-    console.log("changed");
-    setFilterCategory(value);
-  };
-
-  const handleDelete = (id) => {
-    deleteProductById(id).then(() => {
-      setList(list.filter((product) => product.id != id));
-    });
-  };
-
-  const handleEdit = (id) => {
-    const temp = list.find((product) => product.id == id);
-    setEditingProduct(temp);
-  };
+  const [unusedState, setUnusedState] = useState(false);
+  let filteredList = useMemo(
+    () => filterListByCategory(list, filterCategory),
+    [list, filterCategory]
+  );
+  let categories = getCategories(list);
+  const inputRef = useRef(null);
 
   useEffect(() => {
+    //fetch list at start of render
     fetchProducts().then((data) => {
       setList(data);
     });
   }, []);
 
-  useEffect(() => {
-    const tempCategories = [];
-    list.forEach((product) => {
-      if (tempCategories.indexOf(product.category) === -1) {
-        tempCategories.push(product.category);
-      }
-    });
+  const onSubmit = (data) => {
+    editProduct(data);
+    setList(updateLocalList(list, data));
+  };
 
-    setCategories(tempCategories);
-  }, [list]);
-
-  useEffect(() => {
-    console.log(list);
-    console.log(filteredList);
-  });
-  useEffect(() => {
-    if (filterCategory && filterCategory.length != 0) {
-      setFilteredList(list.filter((item) => item.category === filterCategory));
-    } else {
-      setFilteredList(list);
-    }
-  }, [filterCategory, list]);
+  const handleFilterChoice = (value) => {
+    setFilterCategory(value);
+  };
+  const handleDelete = useCallback(
+    (id) => {
+      deleteProductById(id).then(() => {
+        setList(list.filter((product) => product.id != id));
+      });
+    },
+    [list]
+  );
+  const handleEdit = useCallback(
+    (id) => {
+      setEditingProduct(list.find((product) => product.id == id));
+      inputRef.current.focus();
+    },
+    [list]
+  );
 
   const {
     token: { colorBgContainer },
@@ -105,15 +90,21 @@ function App() {
               overflow: "initial",
             }}
           >
+            <Button onClick={() => setUnusedState(!unusedState)}>
+              Test if useMemo works, fails if console.log()
+            </Button>
             <div
               style={{
                 padding: 24,
                 textAlign: "center",
                 background: colorBgContainer,
-                // borderRadius: borderRadiusLG,
               }}
             >
-              <EditInput onSubmit={onSubmit} product={editingProduct} />
+              <EditInput
+                onSubmit={onSubmit}
+                product={editingProduct}
+                ref={inputRef}
+              />
               <span>chosen: {filterCategory}</span>
               <DropdownSelect
                 categories={categories}
