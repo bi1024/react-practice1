@@ -1,4 +1,5 @@
-import axios from "../../react-login/src/api/axios";
+// import axios from "../../react-login/src/api/axios";
+import axios from "axios";
 
 
 
@@ -29,9 +30,8 @@ export const editProduct = async (product) => {
         response.data.description = product.description;
         response.data.category = product.category;
         response.data.price = product.price;
-        console.log(response.data);
-        await axios.patch(`http://localhost:3000/products/${response.data.id}`, response.data)
-        return response.data;
+        const response2 = await axios.patch(`http://localhost:3000/products/${response.data.id}`, response.data)
+        return response2.data;
     } catch (error) {
         console.log(`Error: ${error}`);
     }
