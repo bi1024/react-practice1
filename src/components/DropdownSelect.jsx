@@ -1,8 +1,6 @@
 import { Select } from "antd";
 import { PropTypes } from "prop-types";
 
-
-
 const DropdownSelect = ({ categories, handleFilterChoice }) => {
   const categoriesList = [];
   categories.forEach((category) =>
@@ -25,6 +23,6 @@ const DropdownSelect = ({ categories, handleFilterChoice }) => {
 export default DropdownSelect;
 // let it be known prop types is only done to appease the eslint god
 DropdownSelect.propTypes = {
-    categories: PropTypes.array,
-    handleFilterChoice: PropTypes.func,
-  };
+  categories: PropTypes.array,
+  handleFilterChoice: PropTypes.func,
+};

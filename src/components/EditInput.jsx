@@ -1,6 +1,6 @@
 import { useState, useEffect, forwardRef } from "react";
 import { PropTypes } from "prop-types";
-// = forwardRef((props, ref)
+
 const EditInput = forwardRef(({ onSubmit, product }, ref) => {
   const [id, setId] = useState("");
   const [title, setTitle] = useState("");

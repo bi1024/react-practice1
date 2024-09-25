@@ -1,7 +1,6 @@
 import { Space, Table } from "antd";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import { PropTypes } from "prop-types";
-import { useEffect } from "react";
 
 // List = memo(function List({ items })
 const ProductTable = memo(function ProductTable({

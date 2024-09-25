@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import {
   fetchProducts,
   deleteProductById,
@@ -16,7 +16,6 @@ import {
   getCategories,
   updateLocalList,
 } from "./utils/productList";
-import { useCallback } from "react";
 
 function App() {
   const [filterCategory, setFilterCategory] = useState("");
@@ -90,9 +89,9 @@ function App() {
               overflow: "initial",
             }}
           >
-            <Button onClick={() => setUnusedState(!unusedState)}>
+            {/* <Button onClick={() => setUnusedState(!unusedState)}>
               Test if useMemo works, fails if console.log()
-            </Button>
+            </Button> */}
             <div
               style={{
                 padding: 24,
@@ -105,7 +104,6 @@ function App() {
                 product={editingProduct}
                 ref={inputRef}
               />
-              <span>chosen: {filterCategory}</span>
               <DropdownSelect
                 categories={categories}
                 handleFilterChoice={handleFilterChoice}
