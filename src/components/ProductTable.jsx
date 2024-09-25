@@ -8,7 +8,7 @@ const ProductTable = memo(function ProductTable({
   handleDelete,
   handleEdit,
 }) {
-  useEffect(() => console.log("render table"));
+  useEffect(() => console.log("render table")); //check if table is re-rendered (click button to change parent component's state)
   const columns = [
     {
       title: "id",

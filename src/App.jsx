@@ -90,6 +90,7 @@ function App() {
             }}
           >
             {/* <Button onClick={() => setUnusedState(!unusedState)}>
+            
               Test if useMemo works, fails if console.log()
             </Button> */}
             <div

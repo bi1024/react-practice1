@@ -5,8 +5,8 @@ import axios from "axios";
 
 export const fetchProducts = async () => {
     try {
-        const response = await axios.get('http://localhost:3000/products');
-        return response.data;
+        const response = await fetch('http://localhost:3000/products');
+        return response.json();
     } catch (error) {//supposed to catch error but no back end to throw error
         console.log(`Error: ${error}`);
     }
@@ -14,8 +14,10 @@ export const fetchProducts = async () => {
 
 export const deleteProductById = async (productId) => {
     try {
-        const response = await axios.delete(`http://localhost:3000/products/${productId}`)
-        return response.data;
+        const response = await fetch(`http://localhost:3000/products/${productId}`, {
+            method: 'DELETE'
+        })
+        return response.json();
     } catch (error) {
         console.log(`Error: ${error}`);
     }
@@ -23,14 +25,22 @@ export const deleteProductById = async (productId) => {
 
 export const editProduct = async (product) => {
     try {
-        console.log(product);
-        const response = await axios.get(`http://localhost:3000/products/${product.id}`);
-        response.data.title = product.title;
-        response.data.description = product.description;
-        response.data.category = product.category;
-        response.data.price = product.price;
-        const response2 = await axios.patch(`http://localhost:3000/products/${response.data.id}`, response.data)
-        return response2.data;
+        let fetchResponse = await fetch(`http://localhost:3000/products/${product.id}`);
+        fetchResponse = await fetchResponse.json();
+
+        fetchResponse.title = product.title;
+        fetchResponse.description = product.description;
+        fetchResponse.category = product.category;
+        fetchResponse.price = product.price;
+
+        let patchResponse = await fetch(`http://localhost:3000/products/${fetchResponse.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(fetchResponse)
+        });
+        return patchResponse.json();
     } catch (error) {
         console.log(`Error: ${error}`);
     }
