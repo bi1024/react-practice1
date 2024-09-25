@@ -4,7 +4,7 @@ import {
   deleteProductById,
   editProduct,
 } from "./services/services";
-import { Button, Layout, theme } from "antd";
+import { Layout, theme } from "antd";
 const { Header, Content, Footer } = Layout;
 
 import ProductTable from "./components/ProductTable";
@@ -19,10 +19,9 @@ import {
 
 function App() {
   const [filterCategory, setFilterCategory] = useState("");
-  // const [categories, setCategories] = useState([]);
   const [list, setList] = useState([]);
   const [editingProduct, setEditingProduct] = useState({});
-  const [unusedState, setUnusedState] = useState(false);
+  // const [unusedState, setUnusedState] = useState(false);
   let filteredList = useMemo(
     () => filterListByCategory(list, filterCategory),
     [list, filterCategory]
@@ -90,7 +89,7 @@ function App() {
             }}
           >
             {/* <Button onClick={() => setUnusedState(!unusedState)}>
-            
+
               Test if useMemo works, fails if console.log()
             </Button> */}
             <div

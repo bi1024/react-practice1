@@ -1,8 +1,3 @@
-// import axios from "../../react-login/src/api/axios";
-import axios from "axios";
-
-
-
 export const fetchProducts = async () => {
     try {
         const response = await fetch('http://localhost:3000/products');
