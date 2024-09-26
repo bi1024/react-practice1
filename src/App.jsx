@@ -18,6 +18,7 @@ import {
 } from "./utils/productList";
 
 function App() {
+
   const [filterCategory, setFilterCategory] = useState("");
   const [list, setList] = useState([]);
   const [editingProduct, setEditingProduct] = useState({});

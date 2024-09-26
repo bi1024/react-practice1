@@ -1,6 +1,8 @@
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export const fetchProducts = async () => {
     try {
-        const response = await fetch('http://localhost:3000/products');
+        const response = await fetch(`${apiUrl}/products`);
         return response.json();
     } catch (error) {//supposed to catch error but no back end to throw error
         console.log(`Error: ${error}`);
@@ -9,7 +11,7 @@ export const fetchProducts = async () => {
 
 export const deleteProductById = async (productId) => {
     try {
-        const response = await fetch(`http://localhost:3000/products/${productId}`, {
+        const response = await fetch(`${apiUrl}/products/${productId}`, {
             method: 'DELETE'
         })
         return response.json();
@@ -20,7 +22,7 @@ export const deleteProductById = async (productId) => {
 
 export const editProduct = async (product) => {
     try {
-        let fetchResponse = await fetch(`http://localhost:3000/products/${product.id}`);
+        let fetchResponse = await fetch(`${apiUrl}/products/${product.id}`);
         fetchResponse = await fetchResponse.json();
 
         fetchResponse.title = product.title;
@@ -28,7 +30,7 @@ export const editProduct = async (product) => {
         fetchResponse.category = product.category;
         fetchResponse.price = product.price;
 
-        let patchResponse = await fetch(`http://localhost:3000/products/${fetchResponse.id}`, {
+        let patchResponse = await fetch(`${apiUrl}/products/${fetchResponse.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
