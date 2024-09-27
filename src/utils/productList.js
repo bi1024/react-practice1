@@ -1,11 +1,11 @@
 
 export const getCategories = (list) => {
-    const tempCategories = [];
-    list.forEach((product) => {
-        if (tempCategories.indexOf(product.category) === -1) {
-            tempCategories.push(product.category);
+    const tempCategories = list.reduce((result, current) => {
+        if (result.indexOf(current.category) === -1) {
+            result.push(current.category)
         }
-    });
+        return result;
+    }, [])
     return tempCategories;
 }
 export const filterListByCategory = (list, category) => {

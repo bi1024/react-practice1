@@ -34,8 +34,12 @@ function App() {
 
   //hooks
   useEffect(() => {
-    //!implement code to prevent race condition here
+    const abortController = new AbortController();
+
     fetchProductData();
+    return () => {
+      abortController.abort();
+    };
   }, [toggle]);
 
   let filteredList = useMemo(

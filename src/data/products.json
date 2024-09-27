@@ -2,7 +2,7 @@
   "products": [
     {
       "id": "4",
-      "title": "Red Lipstick",
+      "title": "Red Lipstickkk",
       "description": "The Red Lipstick is a classic and bold choice for adding a pop of color to your lips. With a creamy and pigmented formula, it provides a vibrant and long-lasting finish.",
       "category": "beauty",
       "price": 12.99,
@@ -1615,30 +1615,30 @@
       "id": "kHttr5t"
     },
     {
-      "title": "asdf",
-      "description": "asdf",
-      "category": "asdf",
-      "price": "90",
+      "title": "Pineapple",
+      "description": "Is a pineapple",
+      "category": "groceries",
+      "price": "3.99",
       "id": "ZpjaMnZ"
     },
     {
       "title": "sdf",
       "description": "sdf",
-      "category": "sdf",
+      "category": "groceries",
       "price": "10",
       "id": "7g6EWTL"
     },
     {
       "title": "sd",
       "description": "sd",
-      "category": "sd",
+      "category": "furniture",
       "price": "10",
       "id": "ttFU4vN"
     },
     {
       "title": "123",
       "description": "123",
-      "category": "123",
+      "category": "fragrances",
       "price": "123",
       "id": "PPpPPNS"
     },
@@ -1648,57 +1648,6 @@
       "category": "beauty",
       "price": 14.99,
       "id": "HSbqyQs"
-    },
-    {
-      "title": "1",
-      "description": "1",
-      "category": "1",
-      "price": "1",
-      "id": "6GOMtJZ"
-    },
-    {
-      "title": "2",
-      "description": "2",
-      "category": "2",
-      "price": "2",
-      "id": "My4WXys"
-    },
-    {
-      "id": "hw-a_Ou",
-      "title": "3",
-      "description": "3",
-      "category": "3",
-      "price": "3"
-    },
-    {
-      "id": "jT832NB"
-    },
-    {
-      "id": "UgeD2OE"
-    },
-    {
-      "id": "LJ1J4-9"
-    },
-    {
-      "title": "4",
-      "description": "4",
-      "category": "4",
-      "price": "4",
-      "id": "2Elsx3_"
-    },
-    {
-      "title": "12",
-      "description": "12",
-      "category": "12",
-      "price": "12",
-      "id": "aFF50JT"
-    },
-    {
-      "title": "9",
-      "description": "9",
-      "category": "9",
-      "price": "9",
-      "id": "Nt7fSZ4"
     }
   ]
 }

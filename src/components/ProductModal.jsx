@@ -10,7 +10,7 @@ const ProductModal = ({
   isModalOpen,
   setIsModalOpen,
   onSubmit,
-  setToggle,
+  setToggle, //triggers re-render
   toggle,
   product,
 }) => {
@@ -147,6 +147,7 @@ const ProductModal = ({
           </Form.Item>
 
           <Form.Item
+            style={{ display: "none" }}
             wrapperCol={{
               offset: 8,
               span: 16,
