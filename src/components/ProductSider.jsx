@@ -6,9 +6,6 @@ import { ShopOutlined } from "@ant-design/icons";
 import { useEffect } from "react";
 
 const ProductSider = () => {
-  useEffect(() => {
-    console.log("sider render");
-  });
   const siderStyle = {
     overflow: "auto",
     height: "100vh",

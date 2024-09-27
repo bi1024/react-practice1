@@ -47,8 +47,6 @@ function App() {
     [list, filterCategory]
   );
 
-  // let categories = getCategories(list);
-
   let categories = useMemo(() => {
     return getCategories(list);
   }, [list]);
