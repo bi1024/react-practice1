@@ -21,7 +21,7 @@ const DropdownSelect = ({ categories, handleFilterChoice }) => {
   );
 };
 export default DropdownSelect;
-// let it be known prop types is only done to appease the eslint god
+
 DropdownSelect.propTypes = {
   categories: PropTypes.array,
   handleFilterChoice: PropTypes.func,

@@ -4,12 +4,13 @@ const refetch = (toggle, setToggle) => {
     setToggle(!toggle);
 }
 
-export const fetchProducts = async () => {
+export const fetchProducts = async (signal) => {
     try {
-        const response = await fetch(`${apiUrl}/products`);
+        const response = await fetch(`${apiUrl}/products`, { signal: signal, });
         return response.json();
     } catch (error) {
         console.log(`Error: ${error}`);
+        return [];//ensure no reading of undefined => page isn't borked
     }
 }
 

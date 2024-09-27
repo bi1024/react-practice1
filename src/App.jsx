@@ -35,8 +35,7 @@ function App() {
   //hooks
   useEffect(() => {
     const abortController = new AbortController();
-
-    fetchProductData();
+    fetchProductData(abortController.signal);
     return () => {
       abortController.abort();
     };
@@ -48,8 +47,8 @@ function App() {
   );
 
   //functions
-  const fetchProductData = async () => {
-    const response = await fetchProducts();
+  const fetchProductData = async (signal) => {
+    const response = await fetchProducts(signal);
     setList(response);
   };
 

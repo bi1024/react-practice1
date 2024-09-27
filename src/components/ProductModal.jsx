@@ -1,6 +1,5 @@
-import { Button, Modal } from "antd";
-import { Form } from "antd";
-import { Input } from "antd";
+import { Button, Modal, Form, Input } from "antd";
+const { TextArea } = Input;
 import { editProduct } from "../services/services";
 import { useEffect } from "react";
 import { PropTypes } from "prop-types";
@@ -17,6 +16,7 @@ const ProductModal = ({
   const [form] = Form.useForm();
 
   const handleOk = () => {
+    form.submit();
     setIsModalOpen(false);
   };
 
@@ -111,7 +111,7 @@ const ProductModal = ({
               },
             ]}
           >
-            <Input />
+            <TextArea rows={4} />
           </Form.Item>
 
           <Form.Item
@@ -147,7 +147,7 @@ const ProductModal = ({
           </Form.Item>
 
           <Form.Item
-            style={{ display: "none" }}
+            style={{ display: "none" }}//to preserve submitting on enter
             wrapperCol={{
               offset: 8,
               span: 16,
