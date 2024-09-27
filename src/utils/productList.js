@@ -1,4 +1,3 @@
-
 export const getCategories = (list) => {
     const tempCategories = list.reduce((result, current) => {
         if (result.indexOf(current.category) === -1) {

@@ -1,9 +1,14 @@
 import React from "react";
+import { memo } from "react";
 import { Menu, Layout } from "antd";
 const { Sider } = Layout;
 import { ShopOutlined } from "@ant-design/icons";
+import { useEffect } from "react";
 
 const ProductSider = () => {
+  useEffect(() => {
+    console.log("sider render");
+  });
   const siderStyle = {
     overflow: "auto",
     height: "100vh",
@@ -34,4 +39,4 @@ const ProductSider = () => {
   );
 };
 
-export default ProductSider;
+export default memo(ProductSider);

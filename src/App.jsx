@@ -8,7 +8,7 @@ import "./App.css";
 import ProductTable from "./components/ProductTable";
 import DropdownSelect from "./components/DropdownSelect";
 import ProductSider from "./components/ProductSider";
-import ProductModal from "./components/ProductModal";
+const ProductModal = lazy(() => import("./components/ProductModal.jsx"));
 
 import { filterListByCategory, getCategories } from "./utils/productList";
 
@@ -18,6 +18,7 @@ import {
   editProduct,
   addProduct,
 } from "./services/services";
+import { Suspense } from "react";
 
 function App() {
   const [toggle, setToggle] = useState(false); //to cause manual refetch
@@ -27,7 +28,7 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   let onModalSubmit = useRef(addProduct);
-  let categories = getCategories(list);
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -46,15 +47,15 @@ function App() {
     [list, filterCategory]
   );
 
-  //functions
-  const fetchProductData = async (signal) => {
-    const response = await fetchProducts(signal);
-    setList(response);
-  };
+  // let categories = getCategories(list);
 
-  const handleFilterChoice = (value) => {
+  let categories = useMemo(() => {
+    return getCategories(list);
+  }, [list]);
+
+  const handleFilterChoice = useCallback((value) => {
     setFilterCategory(value);
-  };
+  }, []);
 
   const handleDelete = useCallback(
     (id) => {
@@ -66,12 +67,17 @@ function App() {
   const handleEdit = useCallback(
     (id) => {
       setEditingProduct(list.find((product) => product.id == id));
-      // inputRef.current.focus();
       onModalSubmit.current = editProduct;
       setIsModalOpen(true);
     },
     [list]
   );
+
+  //functions
+  const fetchProductData = async (signal) => {
+    const response = await fetchProducts(signal);
+    setList(response);
+  };
 
   const handleAddProductClick = () => {
     onModalSubmit.current = addProduct;
@@ -81,15 +87,20 @@ function App() {
 
   return (
     <>
-      <ProductModal
-        text="Add a product"
-        isModalOpen={isModalOpen}
-        setIsModalOpen={setIsModalOpen}
-        onSubmit={onModalSubmit.current}
-        setToggle={setToggle}
-        toggle={toggle}
-        product={editingProduct}
-      ></ProductModal>
+      {isModalOpen && (
+        <Suspense>
+          <ProductModal
+            text="Add a product"
+            isModalOpen={isModalOpen}
+            setIsModalOpen={setIsModalOpen}
+            onSubmit={onModalSubmit.current}
+            setToggle={setToggle}
+            toggle={toggle}
+            product={editingProduct}
+          ></ProductModal>
+        </Suspense>
+      )}
+
       <Layout
         hasSider
         style={{

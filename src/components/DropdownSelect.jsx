@@ -1,9 +1,11 @@
 import { Select } from "antd";
 import { PropTypes } from "prop-types";
+import { memo } from "react";
 
 const DropdownSelect = ({ categories, handleFilterChoice }) => {
+  
   const categoriesList = [];
-  categories.forEach((category) =>
+  categories?.forEach((category) =>
     categoriesList.push({ label: category, value: category })
   );
   return (
@@ -20,7 +22,7 @@ const DropdownSelect = ({ categories, handleFilterChoice }) => {
     />
   );
 };
-export default DropdownSelect;
+export default memo(DropdownSelect);
 
 DropdownSelect.propTypes = {
   categories: PropTypes.array,
