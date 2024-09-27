@@ -29,3 +29,5 @@ export const updateLocalList = (list, data) => {
             : product
     ))
 }
+
+

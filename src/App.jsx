@@ -1,72 +1,92 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { useState, useEffect, useMemo, useRef, useCallback, lazy } from "react";
+
+import { Button, Layout, theme, Flex, Space } from "antd";
+const { Header, Content, Footer } = Layout;
+
+import "./App.css";
+
+import ProductTable from "./components/ProductTable";
+import DropdownSelect from "./components/DropdownSelect";
+import ProductSider from "./components/ProductSider";
+import ProductModal from "./components/ProductModal";
+
+import { filterListByCategory, getCategories } from "./utils/productList";
+
 import {
   fetchProducts,
   deleteProductById,
   editProduct,
+  addProduct,
 } from "./services/services";
-import { Layout, theme } from "antd";
-const { Header, Content, Footer } = Layout;
-
-import ProductTable from "./components/ProductTable";
-import DropdownSelect from "./components/DropdownSelect";
-import EditInput from "./components/EditInput";
-import ProductSider from "./components/ProductSider";
-import {
-  filterListByCategory,
-  getCategories,
-  updateLocalList,
-} from "./utils/productList";
 
 function App() {
-
+  const [toggle, setToggle] = useState(false); //to cause manual refetch
   const [filterCategory, setFilterCategory] = useState("");
   const [list, setList] = useState([]);
   const [editingProduct, setEditingProduct] = useState({});
-  // const [unusedState, setUnusedState] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  let onModalSubmit = useRef(addProduct);
+  let categories = getCategories(list);
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
+
+  //hooks
+  useEffect(() => {
+    //!implement code to prevent race condition here
+    fetchProductData();
+  }, [toggle]);
+
   let filteredList = useMemo(
     () => filterListByCategory(list, filterCategory),
     [list, filterCategory]
   );
-  let categories = getCategories(list);
-  const inputRef = useRef(null);
 
-  useEffect(() => {
-    //fetch list at start of render
-    fetchProducts().then((data) => {
-      setList(data);
-    });
-  }, []);
-
-  const onSubmit = (data) => {
-    editProduct(data);
-    setList(updateLocalList(list, data));
+  //functions
+  const fetchProductData = async () => {
+    const response = await fetchProducts();
+    setList(response);
   };
 
   const handleFilterChoice = (value) => {
     setFilterCategory(value);
   };
+
   const handleDelete = useCallback(
     (id) => {
-      deleteProductById(id).then(() => {
-        setList(list.filter((product) => product.id != id));
-      });
+      deleteProductById(id, toggle, setToggle);
     },
-    [list]
+    [toggle]
   );
+
   const handleEdit = useCallback(
     (id) => {
       setEditingProduct(list.find((product) => product.id == id));
-      inputRef.current.focus();
+      // inputRef.current.focus();
+      onModalSubmit.current = editProduct;
+      setIsModalOpen(true);
     },
     [list]
   );
 
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+  const handleAddProductClick = () => {
+    onModalSubmit.current = addProduct;
+    setEditingProduct({});
+    setIsModalOpen(true);
+  };
 
   return (
     <>
+      <ProductModal
+        text="Add a product"
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        onSubmit={onModalSubmit.current}
+        setToggle={setToggle}
+        toggle={toggle}
+        product={editingProduct}
+      ></ProductModal>
       <Layout
         hasSider
         style={{
@@ -75,7 +95,6 @@ function App() {
         }}
       >
         <ProductSider />
-
         <Layout>
           <Header
             style={{
@@ -89,10 +108,6 @@ function App() {
               overflow: "initial",
             }}
           >
-            {/* <Button onClick={() => setUnusedState(!unusedState)}>
-
-              Test if useMemo works, fails if console.log()
-            </Button> */}
             <div
               style={{
                 padding: 24,
@@ -100,15 +115,16 @@ function App() {
                 background: colorBgContainer,
               }}
             >
-              <EditInput
-                onSubmit={onSubmit}
-                product={editingProduct}
-                ref={inputRef}
-              />
-              <DropdownSelect
-                categories={categories}
-                handleFilterChoice={handleFilterChoice}
-              />
+              <Flex justify="flex-end">
+                <Space>
+                  <DropdownSelect
+                    categories={categories}
+                    handleFilterChoice={handleFilterChoice}
+                  />
+                  <Button onClick={handleAddProductClick}>Add a product</Button>
+                </Space>
+              </Flex>
+
               <ProductTable
                 data={filteredList}
                 handleDelete={handleDelete}

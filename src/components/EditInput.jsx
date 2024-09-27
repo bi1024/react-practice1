@@ -8,6 +8,7 @@ const EditInput = forwardRef(({ onSubmit, product }, ref) => {
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
   useEffect(() => {
+    //try using initials value of antd's form instead
     setId(product.id);
     setTitle(product.title);
     setDescription(product.description);
@@ -25,7 +26,7 @@ const EditInput = forwardRef(({ onSubmit, product }, ref) => {
   };
 
   return (
-    // Em dùng html vì em tốn ~ hơn 1 tiếng vô form của ant design mà làm không được =)))
+
     <form onSubmit={handleSubmit}>
       <input value={id} readOnly></input>
       <input

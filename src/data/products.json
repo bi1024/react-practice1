@@ -1,127 +1,6 @@
 {
   "products": [
     {
-      "id": "3",
-      "title": "Poo0000wah Canister",
-      "description": "The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
-      "category": "beauty",
-      "price": 14.99,
-      "discountPercentage": 18.14,
-      "rating": 3.82,
-      "stock": 59,
-      "tags": [
-        "beauty",
-        "face powder"
-      ],
-      "brand": "Velvet Touch",
-      "sku": "9EN8WLT2",
-      "weight": 8,
-      "dimensions": {
-        "width": 24.16,
-        "height": 10.7,
-        "depth": 11.07
-      },
-      "warrantyInformation": "2 year warranty",
-      "shippingInformation": "Ships in 1-2 business days",
-      "availabilityStatus": "In Stock",
-      "reviews": [
-        {
-          "rating": 5,
-          "comment": "Very happy with my purchase!",
-          "date": "2024-05-23T08:56:21.618Z",
-          "reviewerName": "Ethan Thompson",
-          "reviewerEmail": "ethan.thompson@x.dummyjson.com"
-        },
-        {
-          "rating": 4,
-          "comment": "Great value for money!",
-          "date": "2024-05-23T08:56:21.618Z",
-          "reviewerName": "Levi Hicks",
-          "reviewerEmail": "levi.hicks@x.dummyjson.com"
-        },
-        {
-          "rating": 5,
-          "comment": "Highly impressed!",
-          "date": "2024-05-23T08:56:21.618Z",
-          "reviewerName": "Hazel Gardner",
-          "reviewerEmail": "hazel.gardner@x.dummyjson.com"
-        }
-      ],
-      "returnPolicy": "60 days return policy",
-      "minimumOrderQuantity": 25,
-      "meta": {
-        "createdAt": "2024-05-23T08:56:21.618Z",
-        "updatedAt": "2024-05-23T08:56:21.618Z",
-        "barcode": "0516267971277",
-        "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-      },
-      "images": [
-        "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/1.png"
-      ],
-      "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/thumbnail.png",
-      "method": "PATCH",
-      "body": {
-        "id": "3",
-        "title": "Poowah Canister",
-        "description": "The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
-        "category": "beauty",
-        "price": 14.99,
-        "discountPercentage": 18.14,
-        "rating": 3.82,
-        "stock": 59,
-        "tags": [
-          "beauty",
-          "face powder"
-        ],
-        "brand": "Velvet Touch",
-        "sku": "9EN8WLT2",
-        "weight": 8,
-        "dimensions": {
-          "width": 24.16,
-          "height": 10.7,
-          "depth": 11.07
-        },
-        "warrantyInformation": "2 year warranty",
-        "shippingInformation": "Ships in 1-2 business days",
-        "availabilityStatus": "In Stock",
-        "reviews": [
-          {
-            "rating": 5,
-            "comment": "Very happy with my purchase!",
-            "date": "2024-05-23T08:56:21.618Z",
-            "reviewerName": "Ethan Thompson",
-            "reviewerEmail": "ethan.thompson@x.dummyjson.com"
-          },
-          {
-            "rating": 4,
-            "comment": "Great value for money!",
-            "date": "2024-05-23T08:56:21.618Z",
-            "reviewerName": "Levi Hicks",
-            "reviewerEmail": "levi.hicks@x.dummyjson.com"
-          },
-          {
-            "rating": 5,
-            "comment": "Highly impressed!",
-            "date": "2024-05-23T08:56:21.618Z",
-            "reviewerName": "Hazel Gardner",
-            "reviewerEmail": "hazel.gardner@x.dummyjson.com"
-          }
-        ],
-        "returnPolicy": "60 days return policy",
-        "minimumOrderQuantity": 25,
-        "meta": {
-          "createdAt": "2024-05-23T08:56:21.618Z",
-          "updatedAt": "2024-05-23T08:56:21.618Z",
-          "barcode": "0516267971277",
-          "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-        },
-        "images": [
-          "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/1.png"
-        ],
-        "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Powder%20Canister/thumbnail.png"
-      }
-    },
-    {
       "id": "4",
       "title": "Red Lipstick",
       "description": "The Red Lipstick is a classic and bold choice for adding a pop of color to your lips. With a creamy and pigmented formula, it provides a vibrant and long-lasting finish.",
@@ -180,66 +59,6 @@
         "https://cdn.dummyjson.com/products/images/beauty/Red%20Lipstick/1.png"
       ],
       "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Red%20Lipstick/thumbnail.png"
-    },
-    {
-      "id": "5",
-      "title": "Red Nail Polish",
-      "description": "The Red Nail Polish offers a rich and glossy red hue for vibrant and polished nails. With a quick-drying formula, it provides a salon-quality finish at home.",
-      "category": "beauty",
-      "price": 8.99,
-      "discountPercentage": 2.46,
-      "rating": 3.91,
-      "stock": 71,
-      "tags": [
-        "beauty",
-        "nail polish"
-      ],
-      "brand": "Nail Couture",
-      "sku": "YUIIIP4W",
-      "weight": 9,
-      "dimensions": {
-        "width": 8.11,
-        "height": 10.89,
-        "depth": 29.06
-      },
-      "warrantyInformation": "1 year warranty",
-      "shippingInformation": "Ships in 1 week",
-      "availabilityStatus": "In Stock",
-      "reviews": [
-        {
-          "rating": 5,
-          "comment": "Very pleased!",
-          "date": "2024-05-23T08:56:21.619Z",
-          "reviewerName": "Leo Rivera",
-          "reviewerEmail": "leo.rivera@x.dummyjson.com"
-        },
-        {
-          "rating": 5,
-          "comment": "Great product!",
-          "date": "2024-05-23T08:56:21.619Z",
-          "reviewerName": "Evan Reed",
-          "reviewerEmail": "evan.reed@x.dummyjson.com"
-        },
-        {
-          "rating": 4,
-          "comment": "Highly recommended!",
-          "date": "2024-05-23T08:56:21.619Z",
-          "reviewerName": "Evelyn Sanchez",
-          "reviewerEmail": "evelyn.sanchez@x.dummyjson.com"
-        }
-      ],
-      "returnPolicy": "No return policy",
-      "minimumOrderQuantity": 46,
-      "meta": {
-        "createdAt": "2024-05-23T08:56:21.619Z",
-        "updatedAt": "2024-05-23T08:56:21.619Z",
-        "barcode": "3212847902461",
-        "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
-      },
-      "images": [
-        "https://cdn.dummyjson.com/products/images/beauty/Red%20Nail%20Polish/1.png"
-      ],
-      "thumbnail": "https://cdn.dummyjson.com/products/images/beauty/Red%20Nail%20Polish/thumbnail.png"
     },
     {
       "id": "6",
@@ -556,7 +375,7 @@
       "title": "Annibale Colombo Bed",
       "description": "The Annibale Colombo Bed is a luxurious and elegant bed frame, crafted with high-quality materials for a comfortable and stylish bedroom.",
       "category": "furniture",
-      "price": 1899.99,
+      "price": "18999.99",
       "discountPercentage": 0.29,
       "rating": 4.14,
       "stock": 47,
@@ -863,7 +682,7 @@
     },
     {
       "id": "16",
-      "title": "Apple",
+      "title": "Applee",
       "description": "Fresh and crisp apples, perfect for snacking or incorporating into various recipes.",
       "category": "groceries",
       "price": 1.99,
@@ -1736,6 +1555,150 @@
         "https://cdn.dummyjson.com/products/images/groceries/Kiwi/1.png"
       ],
       "thumbnail": "https://cdn.dummyjson.com/products/images/groceries/Kiwi/thumbnail.png"
+    },
+    {
+      "title": "Kiwi",
+      "description": "Nutrient-rich kiwi, perfect for snacking or adding a tropical twist to your dishes.",
+      "category": "groceries",
+      "price": 2.49,
+      "discountPercentage": 10.32,
+      "rating": 4.37,
+      "stock": 1,
+      "tags": [
+        "fruits"
+      ],
+      "sku": "0X3NORB9",
+      "weight": 8,
+      "dimensions": {
+        "width": 27.3,
+        "height": 7.48,
+        "depth": 15.08
+      },
+      "warrantyInformation": "6 months warranty",
+      "shippingInformation": "Ships in 3-5 business days",
+      "availabilityStatus": "Low Stock",
+      "reviews": [
+        {
+          "rating": 5,
+          "comment": "Very pleased!",
+          "date": "2024-05-23T08:56:21.620Z",
+          "reviewerName": "Nora Russell",
+          "reviewerEmail": "nora.russell@x.dummyjson.com"
+        },
+        {
+          "rating": 5,
+          "comment": "Very pleased!",
+          "date": "2024-05-23T08:56:21.620Z",
+          "reviewerName": "Dylan Wells",
+          "reviewerEmail": "dylan.wells@x.dummyjson.com"
+        },
+        {
+          "rating": 5,
+          "comment": "Great product!",
+          "date": "2024-05-23T08:56:21.620Z",
+          "reviewerName": "Noah Hernandez",
+          "reviewerEmail": "noah.hernandez@x.dummyjson.com"
+        }
+      ],
+      "returnPolicy": "7 days return policy",
+      "minimumOrderQuantity": 8,
+      "meta": {
+        "createdAt": "2024-05-23T08:56:21.620Z",
+        "updatedAt": "2024-05-23T08:56:21.620Z",
+        "barcode": "3325493172934",
+        "qrCode": "https://assets.dummyjson.com/public/qr-code.png"
+      },
+      "images": [
+        "https://cdn.dummyjson.com/products/images/groceries/Kiwi/1.png"
+      ],
+      "thumbnail": "https://cdn.dummyjson.com/products/images/groceries/Kiwi/thumbnail.png",
+      "id": "kHttr5t"
+    },
+    {
+      "title": "asdf",
+      "description": "asdf",
+      "category": "asdf",
+      "price": "90",
+      "id": "ZpjaMnZ"
+    },
+    {
+      "title": "sdf",
+      "description": "sdf",
+      "category": "sdf",
+      "price": "10",
+      "id": "7g6EWTL"
+    },
+    {
+      "title": "sd",
+      "description": "sd",
+      "category": "sd",
+      "price": "10",
+      "id": "ttFU4vN"
+    },
+    {
+      "title": "123",
+      "description": "123",
+      "category": "123",
+      "price": "123",
+      "id": "PPpPPNS"
+    },
+    {
+      "title": "Poowah Canister",
+      "description": "The Powder Canister is a finely milled setting powder designed to set makeup and control shine. With a lightweight and translucent formula, it provides a smooth and matte finish.",
+      "category": "beauty",
+      "price": 14.99,
+      "id": "HSbqyQs"
+    },
+    {
+      "title": "1",
+      "description": "1",
+      "category": "1",
+      "price": "1",
+      "id": "6GOMtJZ"
+    },
+    {
+      "title": "2",
+      "description": "2",
+      "category": "2",
+      "price": "2",
+      "id": "My4WXys"
+    },
+    {
+      "id": "hw-a_Ou",
+      "title": "3",
+      "description": "3",
+      "category": "3",
+      "price": "3"
+    },
+    {
+      "id": "jT832NB"
+    },
+    {
+      "id": "UgeD2OE"
+    },
+    {
+      "id": "LJ1J4-9"
+    },
+    {
+      "title": "4",
+      "description": "4",
+      "category": "4",
+      "price": "4",
+      "id": "2Elsx3_"
+    },
+    {
+      "title": "12",
+      "description": "12",
+      "category": "12",
+      "price": "12",
+      "id": "aFF50JT"
+    },
+    {
+      "title": "9",
+      "description": "9",
+      "category": "9",
+      "price": "9",
+      "id": "Nt7fSZ4"
     }
   ]
 }
