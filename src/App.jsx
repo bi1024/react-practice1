@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef, useCallback, lazy } from "react";
+import { useState, useMemo, useRef, useCallback, lazy } from "react";
 
 import { Button, Layout, theme, Flex, Space } from "antd";
 const { Header, Content, Footer } = Layout;
@@ -14,7 +14,6 @@ const ProductModal = lazy(() => import("./components/ProductModal.jsx"));
 import { filterListByCategory, getCategories } from "./utils/productList";
 
 import {
-  fetchProducts,
   deleteProductById,
   editProduct,
   addProduct,
@@ -37,13 +36,6 @@ function App() {
 
   //hooks
   useFetchProducts(toggle, setList);
-  // useEffect(() => {
-  //   const abortController = new AbortController();
-  //   fetchProductData(abortController.signal);
-  //   return () => {
-  //     abortController.abort();
-  //   };
-  // }, [toggle]);
 
   let filteredList = useMemo(
     () => filterListByCategory(list, filterCategory),
@@ -74,23 +66,12 @@ function App() {
     [list]
   );
 
-  //functions
-  const fetchProductData = async (signal) => {
-    try {
-      const response = await fetchProducts(signal);
-      setList(response);
-    } catch (error) {
-      console.log("in app");
-      throw error;
-    }
-  };
-
   const handleAddProductClick = () => {
     onModalSubmit.current = addProduct;
     setEditingProduct({});
     setIsModalOpen(true);
   };
-  // throw new Error("I crashed");//test error boundary
+
   return (
     <>
       {isModalOpen && (

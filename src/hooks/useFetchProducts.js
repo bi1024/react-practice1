@@ -17,6 +17,7 @@ const useFetchProducts = (toggle, setList) => {
 
         const abortController = new AbortController();
         fetchProductData(abortController.signal);
+
         return () => {
             abortController.abort();
         };

@@ -54,7 +54,8 @@ const ProductTable = ({ data, handleDelete, handleEdit }) => {
       ),
     },
   ];
-  return <Table columns={columns} dataSource={data} />;
+  return <Table columns={columns} dataSource={data} rowKey="id" />;
+  //!rowKey to temporarily suppress react key warning ^
 };
 
 export default memo(ProductTable);
