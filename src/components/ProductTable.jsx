@@ -3,17 +3,13 @@ import { memo } from "react";
 import { PropTypes } from "prop-types";
 
 // List = memo(function List({ items })
-const ProductTable = ({
-  data,
-  handleDelete,
-  handleEdit,
-}) =>{
+const ProductTable = ({ data, handleDelete, handleEdit }) => {
   const columns = [
     {
       title: "id",
       dataIndex: "id",
       key: "id",
-      render: (text) => <a>{text}</a>,
+      // render: (text) => <a>{text}</a>,
     },
     {
       title: "Title",
@@ -62,7 +58,7 @@ const ProductTable = ({
 };
 
 export default memo(ProductTable);
-// let it be known prop types is only done to appease the eslint god
+
 ProductTable.propTypes = {
   data: PropTypes.array,
   handleDelete: PropTypes.func,

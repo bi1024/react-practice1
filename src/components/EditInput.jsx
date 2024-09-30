@@ -49,7 +49,7 @@ const EditInput = forwardRef(({ onSubmit, product }, ref) => {
 });
 EditInput.displayName = "EditInput"; //to follow eslint's rule
 export default EditInput;
-// let it be known prop types is only done to appease the eslint god
+
 EditInput.propTypes = {
   onSubmit: PropTypes.func,
   product: PropTypes.object,

@@ -3,7 +3,6 @@ import { memo } from "react";
 import { Menu, Layout } from "antd";
 const { Sider } = Layout;
 import { ShopOutlined } from "@ant-design/icons";
-import { useEffect } from "react";
 
 const ProductSider = () => {
   const siderStyle = {

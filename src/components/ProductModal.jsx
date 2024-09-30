@@ -3,6 +3,7 @@ const { TextArea } = Input;
 import { editProduct } from "../services/services";
 import { useEffect } from "react";
 import { PropTypes } from "prop-types";
+import { InputNumber } from "antd";
 
 const ProductModal = ({
   text,
@@ -33,7 +34,9 @@ const ProductModal = ({
     if (onSubmit === editProduct) {
       values.id = product.id;
     }
+    values.price = parseFloat(values.price);
     onSubmit(values, toggle, setToggle);
+    console.log(values);
     setIsModalOpen(false);
   };
 
@@ -143,11 +146,23 @@ const ProductModal = ({
               },
             ]}
           >
-            <Input />
+            {/* <Input /> */}
+
+            <InputNumber
+              style={{
+                width: 200,
+              }}
+              defaultValue="1"
+              min="0"
+              max="1000000000"
+              step="0.01"
+              // onChange={onChange}
+              stringMode
+            />
           </Form.Item>
 
           <Form.Item
-            style={{ display: "none" }}//to preserve submitting on enter
+            style={{ display: "none" }} //to preserve submitting on enter
             wrapperCol={{
               offset: 8,
               span: 16,
@@ -164,6 +179,7 @@ const ProductModal = ({
 };
 
 export default ProductModal;
+ 
 ProductModal.propTypes = {
   text: PropTypes.string,
   isModalOpen: PropTypes.bool,

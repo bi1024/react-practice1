@@ -8,6 +8,7 @@ import "./App.css";
 import ProductTable from "./components/ProductTable";
 import DropdownSelect from "./components/DropdownSelect";
 import ProductSider from "./components/ProductSider";
+// import ProductModal from "./components/ProductModal.jsx";
 const ProductModal = lazy(() => import("./components/ProductModal.jsx"));
 
 import { filterListByCategory, getCategories } from "./utils/productList";
@@ -73,8 +74,13 @@ function App() {
 
   //functions
   const fetchProductData = async (signal) => {
-    const response = await fetchProducts(signal);
-    setList(response);
+    try {
+      const response = await fetchProducts(signal);
+      setList(response);
+    } catch (error) {
+      console.log("in app");
+      throw error;
+    }
   };
 
   const handleAddProductClick = () => {
@@ -82,7 +88,7 @@ function App() {
     setEditingProduct({});
     setIsModalOpen(true);
   };
-
+  // throw new Error("I crashed");//test error boundary
   return (
     <>
       {isModalOpen && (

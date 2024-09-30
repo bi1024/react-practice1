@@ -3,7 +3,6 @@ import { PropTypes } from "prop-types";
 import { memo } from "react";
 
 const DropdownSelect = ({ categories, handleFilterChoice }) => {
-  
   const categoriesList = [];
   categories?.forEach((category) =>
     categoriesList.push({ label: category, value: category })
@@ -22,6 +21,7 @@ const DropdownSelect = ({ categories, handleFilterChoice }) => {
     />
   );
 };
+
 export default memo(DropdownSelect);
 
 DropdownSelect.propTypes = {
