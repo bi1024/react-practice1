@@ -4,10 +4,12 @@ import App from "./App.jsx";
 // import './index.css'
 import ErrorBoundary from "./components/ErrorBoundary";
 
+
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ErrorBoundary fallback={<p>Something went wrong</p>}>
-      <App />
-    </ErrorBoundary>
+      <ErrorBoundary fallback={<p>Something went wrong</p>}>
+        <App />
+      </ErrorBoundary>
   </StrictMode>
 );

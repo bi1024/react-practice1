@@ -20,6 +20,7 @@ import {
   addProduct,
 } from "./services/services";
 import { Suspense } from "react";
+import useFetchProducts from "./hooks/useFetchProducts.js";
 
 function App() {
   const [toggle, setToggle] = useState(false); //to cause manual refetch
@@ -35,13 +36,14 @@ function App() {
   } = theme.useToken();
 
   //hooks
-  useEffect(() => {
-    const abortController = new AbortController();
-    fetchProductData(abortController.signal);
-    return () => {
-      abortController.abort();
-    };
-  }, [toggle]);
+  useFetchProducts(toggle, setList);
+  // useEffect(() => {
+  //   const abortController = new AbortController();
+  //   fetchProductData(abortController.signal);
+  //   return () => {
+  //     abortController.abort();
+  //   };
+  // }, [toggle]);
 
   let filteredList = useMemo(
     () => filterListByCategory(list, filterCategory),
