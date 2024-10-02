@@ -4,17 +4,30 @@ import { editProduct } from "../services/services";
 import { useEffect } from "react";
 import { PropTypes } from "prop-types";
 import { InputNumber } from "antd";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const ProductModal = ({
   text,
   isModalOpen,
   setIsModalOpen,
   onSubmit,
-  setToggle, //triggers re-render
-  toggle,
   product,
 }) => {
+  //hooks
   const [form] = Form.useForm();
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (temp) => {
+      onSubmit(temp);
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+      });
+    },
+  });
 
   const handleOk = () => {
     form.submit();
@@ -31,12 +44,12 @@ const ProductModal = ({
   };
 
   const onFinish = (values) => {
+    let temp = values;
     if (onSubmit === editProduct) {
-      values.id = product.id;
+      temp.id = product.id;
     }
-    values.price = parseFloat(values.price);
-    onSubmit(values, toggle, setToggle);
-    console.log(values);
+    temp.price = parseFloat(values.price);
+    mutation.mutate(temp);
     setIsModalOpen(false);
   };
 
@@ -179,7 +192,7 @@ const ProductModal = ({
 };
 
 export default ProductModal;
- 
+
 ProductModal.propTypes = {
   text: PropTypes.string,
   isModalOpen: PropTypes.bool,

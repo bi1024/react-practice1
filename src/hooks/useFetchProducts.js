@@ -10,7 +10,7 @@ const useFetchProducts = (toggle, setList) => {
                 const response = await fetchProducts(signal);
                 setList(response);
             } catch (error) {
-                console.log("in app");
+                console.log(`Error: ${error}`);
                 throw error;
             }
         };

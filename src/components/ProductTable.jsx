@@ -1,9 +1,26 @@
 import { Space, Table } from "antd";
 import { memo } from "react";
 import { PropTypes } from "prop-types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 // List = memo(function List({ items })
 const ProductTable = ({ data, handleDelete, handleEdit }) => {
+  //hooks
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (id) => {
+      handleDelete(id);
+    },
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["products"],
+        refetchType: "all",
+      });
+    },
+  });
+
   const columns = [
     {
       title: "id",
@@ -45,7 +62,15 @@ const ProductTable = ({ data, handleDelete, handleEdit }) => {
           </a>
           <a
             onClick={() => {
-              handleDelete(product.id);
+              mutation.mutate(product.id, {
+                onSuccess: () => {
+                  queryClient.invalidateQueries({
+                    queryKey: ["products"],
+                    refetchType: "all",
+                  });
+                },
+              });
+              // handleDelete(product.id);
             }}
           >
             Delete
@@ -55,7 +80,7 @@ const ProductTable = ({ data, handleDelete, handleEdit }) => {
     },
   ];
   return <Table columns={columns} dataSource={data} rowKey="id" />;
-  //!rowKey to temporarily suppress react key warning ^
+  //rowKey to temporarily suppress react key warning ^
 };
 
 export default memo(ProductTable);

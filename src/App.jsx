@@ -17,14 +17,14 @@ import {
   deleteProductById,
   editProduct,
   addProduct,
+  fetchProducts,
 } from "./services/services";
 import { Suspense } from "react";
-import useFetchProducts from "./hooks/useFetchProducts.js";
+import { useQuery} from "@tanstack/react-query";
 
 function App() {
-  const [toggle, setToggle] = useState(false); //to cause manual refetch
+  // const [toggle, setToggle] = useState(false); //to cause manual refetch
   const [filterCategory, setFilterCategory] = useState("");
-  const [list, setList] = useState([]);
   const [editingProduct, setEditingProduct] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -35,16 +35,21 @@ function App() {
   } = theme.useToken();
 
   //hooks
-  useFetchProducts(toggle, setList);
+
+  const { isPending, isError, data, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+    initialData: [], //for not reading empty data
+  });
 
   let filteredList = useMemo(
-    () => filterListByCategory(list, filterCategory),
-    [list, filterCategory]
+    () => filterListByCategory(data, filterCategory),
+    [data, filterCategory]
   );
 
   let categories = useMemo(() => {
-    return getCategories(list);
-  }, [list]);
+    return getCategories(data);
+  }, [data]);
 
   const handleFilterChoice = useCallback((value) => {
     setFilterCategory(value);
@@ -52,18 +57,18 @@ function App() {
 
   const handleDelete = useCallback(
     (id) => {
-      deleteProductById(id, toggle, setToggle);
+      deleteProductById(id);
     },
-    [toggle]
+    []
   );
 
   const handleEdit = useCallback(
     (id) => {
-      setEditingProduct(list.find((product) => product.id == id));
+      setEditingProduct(data.find((product) => product.id == id));
       onModalSubmit.current = editProduct;
       setIsModalOpen(true);
     },
-    [list]
+    [data]
   );
 
   const handleAddProductClick = () => {
@@ -81,8 +86,6 @@ function App() {
             isModalOpen={isModalOpen}
             setIsModalOpen={setIsModalOpen}
             onSubmit={onModalSubmit.current}
-            setToggle={setToggle}
-            toggle={toggle}
             product={editingProduct}
           ></ProductModal>
         </Suspense>

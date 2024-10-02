@@ -4,6 +4,7 @@ import { memo } from "react";
 
 const DropdownSelect = ({ categories, handleFilterChoice }) => {
   const categoriesList = [];
+  //!memo?
   categories?.forEach((category) =>
     categoriesList.push({ label: category, value: category })
   );
