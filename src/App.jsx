@@ -1,11 +1,9 @@
-import { useState, useMemo, useRef, useCallback, lazy } from "react";
-import { Button, Layout, theme, Flex, Space } from "antd";
-const { Header, Content, Footer } = Layout;
-import { BrowserRouter, Routes, Route, RouterProvider } from "react-router-dom";
+import { useState } from "react";
+import { Layout } from "antd";
+import { RouterProvider } from "react-router-dom";
 import router from "./routes.jsx";
 import "./App.css";
 
-import ProductDashboard from "./pages/ProductDashboard.jsx";
 import { ModalContext } from "./context.js";
 
 function App() {

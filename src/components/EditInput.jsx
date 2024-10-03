@@ -26,7 +26,6 @@ const EditInput = forwardRef(({ onSubmit, product }, ref) => {
   };
 
   return (
-
     <form onSubmit={handleSubmit}>
       <input value={id} readOnly></input>
       <input

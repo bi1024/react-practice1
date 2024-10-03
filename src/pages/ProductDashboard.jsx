@@ -2,14 +2,12 @@ import { useState, useMemo, useRef, useCallback, lazy } from "react";
 import { Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { Button, Layout, theme, Flex, Space } from "antd";
-const { Header, Content, Footer } = Layout;
+import { Button, Flex, Space } from "antd";
 
 import "../App.css";
 
 import ProductTable from "../components/ProductTable.jsx";
 import DropdownSelect from "../components/DropdownSelect.jsx";
-import ProductSider from "../components/ProductSider.jsx";
 import ProductLayout from "../layout/ProductLayout.jsx";
 const ProductModal = lazy(() => import("../components/ProductModal.jsx"));
 
@@ -34,9 +32,7 @@ function ProductDashboard() {
 
   let onModalSubmit = useRef(addProduct); //to persist between renders
 
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+
 
   //hooks
 

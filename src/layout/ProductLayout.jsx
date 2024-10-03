@@ -1,8 +1,7 @@
-import { Button, Layout, theme, Flex, Space } from "antd";
+import {  Layout, theme } from "antd";
 const { Header, Content, Footer } = Layout;
 
 import ProductSider from "../components/ProductSider";
-import DropdownSelect from "../components/DropdownSelect";
 
 const ProductLayout = ({ children }) => {
   const {
