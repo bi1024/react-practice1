@@ -1,7 +1,7 @@
-import { Space, Table } from "antd";
-import { memo } from "react";
-import { PropTypes } from "prop-types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { memo } from "react";
+import { Space, Table } from "antd";
+import { PropTypes } from "prop-types";
 
 // List = memo(function List({ items })
 const ProductTable = ({ data, handleDelete, handleEdit }) => {
@@ -53,6 +53,7 @@ const ProductTable = ({ data, handleDelete, handleEdit }) => {
       key: "action",
       render: (_, product) => (
         <Space size="middle">
+          {/* <Link to={product.id}>Details</Link> */}
           <a
             onClick={() => {
               handleEdit(product.id);
@@ -69,6 +70,7 @@ const ProductTable = ({ data, handleDelete, handleEdit }) => {
                     refetchType: "all",
                   });
                 },
+                //!^redundant onSuccess(already done in useMutation) but reduce faulty fetching (unsolved) when deleting multiple items continuously
               });
               // handleDelete(product.id);
             }}

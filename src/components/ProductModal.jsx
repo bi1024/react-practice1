@@ -1,22 +1,25 @@
-import { Button, Modal, Form, Input } from "antd";
+import { Button, Modal, Form, Input, InputNumber } from "antd";
 const { TextArea } = Input;
-import { editProduct } from "../services/services";
 import { useEffect } from "react";
-import { PropTypes } from "prop-types";
-import { InputNumber } from "antd";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { PropTypes } from "prop-types";
+
+import { editProduct } from "../services/services";
+import { useContext } from "react";
+import { ModalContext } from "../context";
 
 const ProductModal = ({
   text,
-  isModalOpen,
-  setIsModalOpen,
+  // isModalOpen,
+  // setIsModalOpen,
   onSubmit,
   product,
 }) => {
   //hooks
+  const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
-
   const mutation = useMutation({
     mutationFn: (temp) => {
       onSubmit(temp);
@@ -28,6 +31,13 @@ const ProductModal = ({
       });
     },
   });
+
+  let data = JSON.parse(sessionStorage.product);
+  if (data && data.id == product.id) {
+    product = data;
+  } else {
+    sessionStorage.setItem("product", JSON.stringify(product));
+  }
 
   const handleOk = () => {
     form.submit();
@@ -51,6 +61,12 @@ const ProductModal = ({
     temp.price = parseFloat(values.price);
     mutation.mutate(temp);
     setIsModalOpen(false);
+  };
+
+  const onValuesChange = (changedValues, allValues) => {
+    allValues.id = product.id;
+    console.log(allValues);
+    sessionStorage.setItem("product", JSON.stringify(allValues));
   };
 
   //hooks
@@ -98,6 +114,7 @@ const ProductModal = ({
             maxWidth: 600,
           }}
           onFinish={onFinish}
+          onValuesChange={onValuesChange}
           autoComplete="off"
         >
           <Form.Item
@@ -165,7 +182,7 @@ const ProductModal = ({
               style={{
                 width: 200,
               }}
-              defaultValue="1"
+              // defaultValue="1"
               min="0"
               max="1000000000"
               step="0.01"
@@ -198,7 +215,5 @@ ProductModal.propTypes = {
   isModalOpen: PropTypes.bool,
   setIsModalOpen: PropTypes.func,
   onSubmit: PropTypes.func,
-  setToggle: PropTypes.func,
-  toggle: PropTypes.bool,
   product: PropTypes.object,
 };
