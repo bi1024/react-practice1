@@ -1,13 +1,16 @@
-import {  Layout, theme } from "antd";
+import { lazy, memo } from "react";
+
+import { Layout, theme } from "antd";
 const { Header, Content, Footer } = Layout;
 
-import ProductSider from "../components/ProductSider";
+const ProductSider = lazy(() => import("../components/ProductSider.jsx"));
+
+import { PropTypes } from "prop-types";
 
 const ProductLayout = ({ children }) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
-
   return (
     <Layout
       hasSider
@@ -45,11 +48,15 @@ const ProductLayout = ({ children }) => {
             textAlign: "center",
           }}
         >
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          {/* Ant Design ©{new Date().getFullYear()} Created by Ant UED */}
         </Footer>
       </Layout>
     </Layout>
   );
 };
 
-export default ProductLayout;
+export default memo(ProductLayout);
+
+ProductLayout.propTypes = {
+  children: PropTypes.node,
+};

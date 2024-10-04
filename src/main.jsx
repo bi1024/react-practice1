@@ -14,6 +14,7 @@ createRoot(document.getElementById("root")).render(
       <QueryClientProvider client={queryClient}>
         <App />
         <ReactQueryDevtools />
+        {/* Commented out to Lighthouse */}
       </QueryClientProvider>
     </ErrorBoundary>
   </StrictMode>

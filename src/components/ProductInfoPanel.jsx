@@ -6,7 +6,7 @@ import { PropTypes } from "prop-types";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-//!Unused Panel
+//!Unused Component
 
 const ProductInfoPanel = ({ product, onSubmit }) => {
   const [form] = Form.useForm();
@@ -207,6 +207,6 @@ const ProductInfoPanel = ({ product, onSubmit }) => {
 export default ProductInfoPanel;
 
 ProductInfoPanel.propTypes = {
-  onFinish: PropTypes.func,
+  onSubmit: PropTypes.func,
   product: PropTypes.object,
 };

@@ -1,12 +1,14 @@
 //Splitting router into separate file
+import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
-import ProductDashboard from "./pages/ProductDashboard";
-import ProductPage from "./pages/ProductPage";
+import { Navigate } from "react-router-dom";
 
+const ProductDashboard = lazy(() => import("./pages/ProductDashboard.jsx"));
+const ProductPage = lazy(() => import("./pages/ProductPage.jsx"));
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <ProductDashboard></ProductDashboard>,
+    element: <Navigate to="/products/" />,
   },
   {
     path: "products/",

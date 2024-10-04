@@ -1,13 +1,15 @@
 import { useState } from "react";
-import { Layout } from "antd";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes.jsx";
 import "./App.css";
 
-import { ModalContext } from "./context.js";
+import { CategoryContext, ModalContext } from "./context.js";
+import { useReducer } from "react";
+import { filterCategoryReducer } from "./reducers.js";
 
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterCategory, dispatch] = useReducer(filterCategoryReducer, "");
   return (
     <>
       <ModalContext.Provider
@@ -16,7 +18,9 @@ function App() {
           setIsModalOpen,
         }}
       >
-        <RouterProvider router={router} />
+        <CategoryContext.Provider value={{ filterCategory, dispatch }}>
+          <RouterProvider router={router} />
+        </CategoryContext.Provider>
       </ModalContext.Provider>
       {/* <ProductDashboard></ProductDashboard> */}
     </>

@@ -1,28 +1,35 @@
+import { useEffect, useContext } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Modal, Form, Input, InputNumber } from "antd";
 const { TextArea } = Input;
-import { useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { PropTypes } from "prop-types";
 
-import { editProduct } from "../services/services";
-import { useContext } from "react";
 import { ModalContext } from "../context";
+import { editProduct } from "../services/services";
 
-const ProductModal = ({
-  text,
-  // isModalOpen,
-  // setIsModalOpen,
-  onSubmit,
-  product,
-}) => {
-  //hooks
+import { PropTypes } from "prop-types";
+import { getAndSaveInputToSession } from "../utils/product";
+import { memo } from "react";
+
+const ProductModal = ({ text, onSubmit, product }) => {
+  const tempProduct = getAndSaveInputToSession(product);
   const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
-
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
+  //hooks
+
+  useEffect(() => {
+    form.setFieldsValue({
+      title: tempProduct.title,
+      description: tempProduct.description,
+      category: tempProduct.category,
+      price: tempProduct.price,
+    });
+  }, [form, tempProduct]);
+
   const mutation = useMutation({
     mutationFn: (temp) => {
       onSubmit(temp);
+      sessionStorage.removeItem("product");
     },
 
     onSuccess: () => {
@@ -31,13 +38,6 @@ const ProductModal = ({
       });
     },
   });
-
-  let data = JSON.parse(sessionStorage.product);
-  if (data && data.id == product.id) {
-    product = data;
-  } else {
-    sessionStorage.setItem("product", JSON.stringify(product));
-  }
 
   const handleOk = () => {
     form.submit();
@@ -56,7 +56,7 @@ const ProductModal = ({
   const onFinish = (values) => {
     let temp = values;
     if (onSubmit === editProduct) {
-      temp.id = product.id;
+      temp.id = tempProduct.id;
     }
     temp.price = parseFloat(values.price);
     mutation.mutate(temp);
@@ -64,20 +64,9 @@ const ProductModal = ({
   };
 
   const onValuesChange = (changedValues, allValues) => {
-    allValues.id = product.id;
-    console.log(allValues);
+    allValues.id = tempProduct.id;
     sessionStorage.setItem("product", JSON.stringify(allValues));
   };
-
-  //hooks
-  useEffect(() => {
-    form.setFieldsValue({
-      title: product.title,
-      description: product.description,
-      category: product.category,
-      price: product.price,
-    });
-  }, [form, product]);
 
   return (
     <>
@@ -97,10 +86,10 @@ const ProductModal = ({
       >
         <Form
           initialValues={{
-            title: product.title,
-            description: product.description,
-            category: product.category,
-            price: product.price,
+            title: tempProduct.title,
+            description: tempProduct.description,
+            category: tempProduct.category,
+            price: tempProduct.price,
           }}
           form={form}
           name="basic"
@@ -208,12 +197,10 @@ const ProductModal = ({
   );
 };
 
-export default ProductModal;
+export default memo(ProductModal);
 
 ProductModal.propTypes = {
   text: PropTypes.string,
-  isModalOpen: PropTypes.bool,
-  setIsModalOpen: PropTypes.func,
   onSubmit: PropTypes.func,
   product: PropTypes.object,
 };

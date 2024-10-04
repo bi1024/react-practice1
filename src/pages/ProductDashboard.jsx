@@ -1,63 +1,64 @@
-import { useState, useMemo, useRef, useCallback, lazy } from "react";
-import { Suspense } from "react";
+import {
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+  useContext,
+  useReducer,
+  lazy,
+} from "react";
 import { useQuery } from "@tanstack/react-query";
 
+import { Suspense } from "react";
 import { Button, Flex, Space } from "antd";
 
 import "../App.css";
-
-import ProductTable from "../components/ProductTable.jsx";
-import DropdownSelect from "../components/DropdownSelect.jsx";
-import ProductLayout from "../layout/ProductLayout.jsx";
-const ProductModal = lazy(() => import("../components/ProductModal.jsx"));
-
-import { filterListByCategory, getCategories } from "../utils/productList";
-
 import {
   deleteProductById,
   editProduct,
   addProduct,
   fetchProducts,
+  fetchProductsInCategory,
 } from "../services/services.js";
-import { ModalContext } from "../context.js";
-import { useContext } from "react";
-import { filterCategoryReducer } from "../reducers.js";
-import { useReducer } from "react";
+import { filterListByCategory } from "../utils/productList";
+// import { filterCategoryReducer } from "../reducers.js";
+import { CategoryContext, ModalContext } from "../context.js";
+import { memo } from "react";
+
+const ProductTable = lazy(() => import("../components/ProductTable.jsx"));
+const ProductLayout = lazy(() => import("../layout/ProductLayout.jsx"));
+const DropdownSelect = lazy(() => import("../components/DropdownSelect.jsx"));
+const ProductModal = lazy(() => import("../components/ProductModal.jsx"));
 
 function ProductDashboard() {
-  // const [filterCategory, setFilterCategory] = useState("");
-  const [filterCategory, dispatch] = useReducer(filterCategoryReducer, "");
+  const { filterCategory } = useContext(CategoryContext);
   const [editingProduct, setEditingProduct] = useState({});
   const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
 
   let onModalSubmit = useRef(addProduct); //to persist between renders
 
-
-
   //hooks
 
-  const { isPending, isError, data, error } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
+  const { data } = useQuery({
+    queryKey: ["products", filterCategory],
+    queryFn: () => {
+      return fetchProductsInCategory(filterCategory);
+    },
     initialData: [], //for not reading empty data
   });
+  // Todo - Change query for product modal so that it does not need to be fed data, ^ useQuery is currently only for the product modal
 
-  let filteredList = useMemo(
-    () => filterListByCategory(data, filterCategory),
-    [data, filterCategory]
-  );
+  // let filteredList = useMemo(
+  //   () => filterListByCategory(data, filterCategory),
+  //   [data, filterCategory]
+  // );
 
-  let categories = useMemo(() => {
-    return getCategories(data);
-  }, [data]);
-
-  const handleFilterChoice = useCallback((value) => {
-    // setFilterCategory(value);
-    dispatch({
-      type: "changed",
-      filterCategory: value,
-    });
-  }, []);
+  // const handleFilterChoice = useCallback((value) => {
+  //   dispatch({
+  //     type: "changed",
+  //     filterCategory: value,
+  //   });
+  // }, []);
 
   const handleDelete = useCallback((id) => {
     deleteProductById(id);
@@ -84,8 +85,6 @@ function ProductDashboard() {
         <Suspense>
           <ProductModal
             text="Add a product"
-            isModalOpen={isModalOpen}
-            setIsModalOpen={setIsModalOpen}
             onSubmit={onModalSubmit.current}
             product={editingProduct}
           ></ProductModal>
@@ -96,15 +95,15 @@ function ProductDashboard() {
         <Flex justify="flex-end">
           <Space>
             <DropdownSelect
-              categories={categories}
-              handleFilterChoice={handleFilterChoice}
+            // categories={categories}
+            // handleFilterChoice={handleFilterChoice}
             />
             <Button onClick={handleAddProductClick}>Add a product</Button>
           </Space>
         </Flex>
 
         <ProductTable
-          data={filteredList}
+          // data={data}
           handleDelete={handleDelete}
           handleEdit={handleEdit}
         />
@@ -113,4 +112,4 @@ function ProductDashboard() {
   );
 }
 
-export default ProductDashboard;
+export default memo(ProductDashboard);

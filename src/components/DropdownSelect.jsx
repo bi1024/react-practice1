@@ -1,10 +1,22 @@
 import { Select } from "antd";
 import { PropTypes } from "prop-types";
 import { memo } from "react";
+import { fetchCategories } from "../services/services";
+import { useQuery } from "@tanstack/react-query";
+import { useContext } from "react";
+import { CategoryContext } from "../context";
 
-const DropdownSelect = ({ categories, handleFilterChoice }) => {
+const DropdownSelect = () => {
+  const { dispatch } = useContext(CategoryContext);
+
+  //!Static categories, does not change on adding to products
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
+    initialData: [], //for not reading empty data
+  });
+
   const categoriesList = [];
-  //!memo?
   categories?.forEach((category) =>
     categoriesList.push({ label: category, value: category })
   );
@@ -16,7 +28,7 @@ const DropdownSelect = ({ categories, handleFilterChoice }) => {
         width: 120,
       }}
       onChange={(value) => {
-        handleFilterChoice(value);
+        dispatch({ type: "changed", filterCategory: value });
       }}
       options={categoriesList}
     />

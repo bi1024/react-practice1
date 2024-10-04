@@ -1,13 +1,58 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { memo } from "react";
 import { Space, Table } from "antd";
 import { PropTypes } from "prop-types";
+import {
+  fetchProductsInCategory,
+  fetchProductsInCategoryWithPagination,
+} from "../services/services";
+import { useContext } from "react";
+import { CategoryContext } from "../context";
+import { useState } from "react";
+import { useEffect } from "react";
 
 // List = memo(function List({ items })
-const ProductTable = ({ data, handleDelete, handleEdit }) => {
+const ProductTable = ({ handleDelete, handleEdit }) => {
+  const [tableParams, setTableParams] = useState({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+      // total: data.headers,
+    },
+  });
+  const { filterCategory } = useContext(CategoryContext);
+  const { data } = useQuery({
+    queryKey: ["products", filterCategory],
+    queryFn: () => {
+      // console.log("a");
+      return fetchProductsInCategoryWithPagination(filterCategory);
+    },
+    initialData: [], //for not reading empty data
+  });
+  // useEffect(() => {
+  //   setTableParams({
+  //     ...tableParams,
+  //     pagination: {
+  //       ...tableParams.pagination,
+  //       total: data.headers,
+  //       // 200 is mock data, you should read it from server
+  //       // total: data.totalCount,
+  //     },
+  //   });
+  // }, [data, tableParams]);
   //hooks
-  const queryClient = useQueryClient();
+  // const [data, setData] = useState();
+  const [loading, setLoading] = useState(false);
 
+  console.log(tableParams);
+  const queryClient = useQueryClient();
+  const handleTableChange = (pagination) => {
+    setTableParams({
+      pagination,
+    });
+
+    console.log(pagination);
+  };
   const mutation = useMutation({
     mutationFn: (id) => {
       handleDelete(id);
@@ -81,7 +126,15 @@ const ProductTable = ({ data, handleDelete, handleEdit }) => {
       ),
     },
   ];
-  return <Table columns={columns} dataSource={data} rowKey="id" />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={data.result}
+      onChange={handleTableChange}
+      rowKey="id"
+      pagination={tableParams.pagination}
+    />
+  );
   //rowKey to temporarily suppress react key warning ^
 };
 
