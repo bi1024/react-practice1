@@ -79,16 +79,16 @@ export const fetchProductsInCategoryWithPagination = async (category, page, limi
         throw new Error("Network response was not ok");
       }
       let headers = response.headers.get("x-total-count");
-      let result = response.json()
-      return { data: result, headers: headers };
+      let result = await response.json()
+      return { result: result, headers: headers };
     } else {
       const response = await fetch(`${apiUrl}/products?_page=${page}&_limit=${limit}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       let headers = response.headers.get("x-total-count");
-      let result = response.json()
-      return { data: result, headers: headers };
+      let result = await response.json()
+      return { result: result, headers: headers };
     }
   } catch (error) {
     console.log(`Error: ${error}`);
