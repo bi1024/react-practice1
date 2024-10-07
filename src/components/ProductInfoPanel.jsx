@@ -1,12 +1,13 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+
 import { Form } from "antd";
 import { Input, InputNumber, Button, Space } from "antd";
-import { useEffect } from "react";
 const { TextArea } = Input;
-import { PropTypes } from "prop-types";
 import { Link } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-//!Unused Component
+import { PropTypes } from "prop-types";
+//!Unused Component-----------------------------------------
 
 const ProductInfoPanel = ({ product, onSubmit }) => {
   const [form] = Form.useForm();

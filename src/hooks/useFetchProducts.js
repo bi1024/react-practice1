@@ -2,7 +2,8 @@ import { useEffect } from "react";
 
 import { fetchProducts } from "../services/services";
 
-const useFetchProducts = (toggle, setList) => {
+
+const useFetchProducts = (toggle, setList) => {//Unused hook
     useEffect(() => {
 
         const fetchProductData = async (signal) => {

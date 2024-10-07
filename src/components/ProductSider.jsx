@@ -1,5 +1,7 @@
 import React from "react";
+
 import { memo } from "react";
+
 import { Menu, Layout } from "antd";
 const { Sider } = Layout;
 import { ShopOutlined } from "@ant-design/icons";
@@ -23,6 +25,7 @@ const ProductSider = () => {
   }));
 
   return (
+    
     <Sider style={siderStyle}>
       <div className="demo-logo-vertical" />
       <Menu

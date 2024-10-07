@@ -1,10 +1,15 @@
-import { Select } from "antd";
-import { PropTypes } from "prop-types";
-import { memo } from "react";
-import { fetchCategories } from "../services/services";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
+
+import { memo } from "react";
+import { fetchCategories } from "../services/services";
+
+import { Select } from "antd";
+import Loading from "./Loading";
+import { Suspense } from "react";
+
 import { CategoryContext } from "../context";
+import { PropTypes } from "prop-types";
 
 const DropdownSelect = () => {
   const { dispatch } = useContext(CategoryContext);
@@ -21,17 +26,19 @@ const DropdownSelect = () => {
     categoriesList.push({ label: category, value: category })
   );
   return (
-    <Select
-      allowClear
-      defaultValue=""
-      style={{
-        width: 120,
-      }}
-      onChange={(value) => {
-        dispatch({ type: "changed", filterCategory: value });
-      }}
-      options={categoriesList}
-    />
+    <Suspense fallback={<Loading />}>
+      <Select
+        allowClear
+        defaultValue=""
+        style={{
+          width: 120,
+        }}
+        onChange={(value) => {
+          dispatch({ type: "changed", filterCategory: value });
+        }}
+        options={categoriesList}
+      />
+    </Suspense>
   );
 };
 

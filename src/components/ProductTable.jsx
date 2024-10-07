@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect, useImperativeHandle, useContext } from "react";
+
 import { memo, lazy, forwardRef } from "react";
 import {
   deleteProductById,
@@ -9,15 +10,18 @@ import {
 
 import { Suspense } from "react";
 import { Space, Table } from "antd";
-import { PropTypes } from "prop-types";
 import { CategoryContext, ModalContext } from "../context";
 const ProductModal = lazy(() => import("../components/ProductModal.jsx"));
+import Loading from "./Loading";
+
+import { PropTypes } from "prop-types";
 
 //Todo: Implement react query's paginated option
 const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
   const { filterCategory } = useContext(CategoryContext);
-  const [editingProduct, setEditingProduct] = useState({});
   const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+
+  const [editingProduct, setEditingProduct] = useState({});
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -25,15 +29,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       total: 0,
     },
   });
-  useImperativeHandle(
-    ref,
-    () => {
-      return {
-        setEditingProduct,
-      };
-    },
-    []
-  );
+
   const { data, isSuccess } = useQuery({
     queryKey: ["products", filterCategory, tableParams.pagination],
     queryFn: () => {
@@ -45,6 +41,17 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
     },
     initialData: [], //for not reading empty data
   });
+
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        setEditingProduct,
+      };
+    },
+    []
+  ); //expose setEditingProduct to parent
+
   useEffect(() => {
     if (isSuccess && data) {
       setTableParams((prevParams) => ({
@@ -55,16 +62,10 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
         },
       }));
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data]); //updating pagination
 
   const queryClient = useQueryClient();
-  const handleTableChange = (pagination) => {
-    setTableParams({
-      pagination,
-    });
 
-    console.log(pagination);
-  };
   const mutation = useMutation({
     mutationFn: (id) => {
       handleDelete(id);
@@ -78,23 +79,27 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
     },
   });
 
+  const handleTableChange = (pagination) => {
+    setTableParams({
+      pagination,
+    });
+
+    console.log(pagination);
+  };
+
   const handleDelete = (id) => {
     deleteProductById(id);
   };
 
   const handleEdit = (id) => {
+    //Todo:use more appropriate name
     console.log(data.result);
     setEditingProduct(data.result.find((product) => product.id == id));
     onModalSubmit.current = editProduct;
     setIsModalOpen(true);
   };
 
-  // const handleAddProductClick = () => {
-  //   onModalSubmit.current = addProduct;
-  //   setEditingProduct({});
-  //   setIsModalOpen(true);
-  // };
-
+  //table layout variable
   const columns = [
     {
       title: "id",
@@ -153,25 +158,28 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       ),
     },
   ];
+
   return (
     <>
-      {isModalOpen && (
-        <Suspense>
-          <ProductModal
-            text="Add a product"
-            onSubmit={onModalSubmit.current}
-            product={editingProduct}
-          ></ProductModal>
-        </Suspense>
-      )}
-      <Table
-        columns={columns}
-        dataSource={data.result}
-        onChange={handleTableChange}
-        rowKey="id"
-        pagination={tableParams.pagination}
-        //rowKey to temporarily suppress react key warning ^
+      <Suspense fallback={<Loading />}>
+        {isModalOpen && (
+          <Suspense>
+            <ProductModal
+              text="Add a product"
+              onSubmit={onModalSubmit.current}
+              product={editingProduct}
+            ></ProductModal>
+          </Suspense>
+        )}
+        <Table
+          columns={columns}
+          dataSource={data.result}
+          onChange={handleTableChange}
+          rowKey="id"
+          pagination={tableParams.pagination}
+          //rowKey to temporarily suppress react key warning ^
         />
+      </Suspense>
     </>
   );
 });
