@@ -1,50 +1,62 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { memo } from "react";
-import { Space, Table } from "antd";
-import { PropTypes } from "prop-types";
+import { useState, useEffect, useImperativeHandle, useContext } from "react";
+import { memo, lazy, forwardRef } from "react";
 import {
-  fetchProductsInCategory,
+  deleteProductById,
+  editProduct,
   fetchProductsInCategoryWithPagination,
 } from "../services/services";
-import { useContext } from "react";
-import { CategoryContext } from "../context";
-import { useState } from "react";
-import { useEffect } from "react";
 
-// List = memo(function List({ items })
-const ProductTable = ({ handleDelete, handleEdit }) => {
+import { Suspense } from "react";
+import { Space, Table } from "antd";
+import { PropTypes } from "prop-types";
+import { CategoryContext, ModalContext } from "../context";
+const ProductModal = lazy(() => import("../components/ProductModal.jsx"));
+
+//Todo: Implement react query's paginated option
+const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
+  const { filterCategory } = useContext(CategoryContext);
+  const [editingProduct, setEditingProduct] = useState({});
+  const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
       pageSize: 10,
-      // total: data.headers,
+      total: 0,
     },
   });
-  const { filterCategory } = useContext(CategoryContext);
-  const { data } = useQuery({
-    queryKey: ["products", filterCategory],
+  useImperativeHandle(
+    ref,
+    () => {
+      return {
+        setEditingProduct,
+      };
+    },
+    []
+  );
+  const { data, isSuccess } = useQuery({
+    queryKey: ["products", filterCategory, tableParams.pagination],
     queryFn: () => {
-      // console.log("a");
-      return fetchProductsInCategoryWithPagination(filterCategory);
+      return fetchProductsInCategoryWithPagination(
+        filterCategory,
+        tableParams.pagination.current,
+        10
+      );
     },
     initialData: [], //for not reading empty data
   });
-  // useEffect(() => {
-  //   setTableParams({
-  //     ...tableParams,
-  //     pagination: {
-  //       ...tableParams.pagination,
-  //       total: data.headers,
-  //       // 200 is mock data, you should read it from server
-  //       // total: data.totalCount,
-  //     },
-  //   });
-  // }, [data, tableParams]);
-  //hooks
-  // const [data, setData] = useState();
-  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (isSuccess && data) {
+      setTableParams((prevParams) => ({
+        ...prevParams,
+        pagination: {
+          ...prevParams.pagination,
+          total: data.headers, // Assuming totalCount comes from server (header or response)
+        },
+      }));
+    }
+  }, [isSuccess, data]);
 
-  console.log(tableParams);
   const queryClient = useQueryClient();
   const handleTableChange = (pagination) => {
     setTableParams({
@@ -65,6 +77,23 @@ const ProductTable = ({ handleDelete, handleEdit }) => {
       });
     },
   });
+
+  const handleDelete = (id) => {
+    deleteProductById(id);
+  };
+
+  const handleEdit = (id) => {
+    console.log(data.result);
+    setEditingProduct(data.result.find((product) => product.id == id));
+    onModalSubmit.current = editProduct;
+    setIsModalOpen(true);
+  };
+
+  // const handleAddProductClick = () => {
+  //   onModalSubmit.current = addProduct;
+  //   setEditingProduct({});
+  //   setIsModalOpen(true);
+  // };
 
   const columns = [
     {
@@ -98,7 +127,6 @@ const ProductTable = ({ handleDelete, handleEdit }) => {
       key: "action",
       render: (_, product) => (
         <Space size="middle">
-          {/* <Link to={product.id}>Details</Link> */}
           <a
             onClick={() => {
               handleEdit(product.id);
@@ -117,7 +145,6 @@ const ProductTable = ({ handleDelete, handleEdit }) => {
                 },
                 //!^redundant onSuccess(already done in useMutation) but reduce faulty fetching (unsolved) when deleting multiple items continuously
               });
-              // handleDelete(product.id);
             }}
           >
             Delete
@@ -127,21 +154,32 @@ const ProductTable = ({ handleDelete, handleEdit }) => {
     },
   ];
   return (
-    <Table
-      columns={columns}
-      dataSource={data.result}
-      onChange={handleTableChange}
-      rowKey="id"
-      pagination={tableParams.pagination}
-    />
+    <>
+      {isModalOpen && (
+        <Suspense>
+          <ProductModal
+            text="Add a product"
+            onSubmit={onModalSubmit.current}
+            product={editingProduct}
+          ></ProductModal>
+        </Suspense>
+      )}
+      <Table
+        columns={columns}
+        dataSource={data.result}
+        onChange={handleTableChange}
+        rowKey="id"
+        pagination={tableParams.pagination}
+        //rowKey to temporarily suppress react key warning ^
+        />
+    </>
   );
-  //rowKey to temporarily suppress react key warning ^
-};
+});
 
+ProductTable.displayName = "ProductTable";
 export default memo(ProductTable);
 
 ProductTable.propTypes = {
   data: PropTypes.array,
-  handleDelete: PropTypes.func,
-  handleEdit: PropTypes.func,
+  onModalSubmit: PropTypes.object,
 };

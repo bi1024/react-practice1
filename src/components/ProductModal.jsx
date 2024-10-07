@@ -33,6 +33,7 @@ const ProductModal = ({ text, onSubmit, product }) => {
     },
 
     onSuccess: () => {
+      console.log("mutated");
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });
