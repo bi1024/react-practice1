@@ -64,6 +64,20 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
     }
   }, [isSuccess, data]); //updating pagination
 
+  useEffect(() => {
+    console.log("a");
+    if (isSuccess && data && data.headers !== tableParams.pagination.total) {
+      console.log("ab");
+      setTableParams((prevParams) => ({
+        ...prevParams,
+        pagination: {
+          ...prevParams.pagination,
+          total: data.headers, // Only update if the total has changed
+        },
+      }));
+    }
+  }, [isSuccess, data, tableParams.pagination.total]);
+
   const queryClient = useQueryClient();
 
   const mutation = useMutation({

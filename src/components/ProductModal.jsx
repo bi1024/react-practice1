@@ -8,6 +8,7 @@ import { getAndSaveInputToSession } from "../utils/product";
 import { Button, Modal, Form, Input, InputNumber } from "antd";
 const { TextArea } = Input;
 import { Suspense } from "react";
+import Loading from "./Loading";
 
 import { ModalContext } from "../context";
 import { PropTypes } from "prop-types";
