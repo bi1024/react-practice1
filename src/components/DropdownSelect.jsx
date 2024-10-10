@@ -23,7 +23,7 @@ const DropdownSelect = () => {
 
   const categoriesList = [];
   categories?.forEach((category) =>
-    categoriesList.push({ label: category, value: category })
+    categoriesList.push({ label: category.name, value: category.name })
   );
   return (
     <Suspense fallback={<Loading />}>

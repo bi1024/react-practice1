@@ -15,7 +15,7 @@ export const useProductsQuery = (filterCategory, current, pageSize) => {
         current,
         pageSize
       ),
-    placeholderData: keepPreviousData,
+    placeholderData:  (previousData) => previousData,
     gcTime: 15 * 60 * 60,
     staleTime: 5 * 60 * 60,
   });

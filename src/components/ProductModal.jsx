@@ -2,12 +2,11 @@ import { useEffect, useContext } from "react";
 import {
   useIsFetching,
   useMutation,
-  useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
 
 import { memo } from "react";
-import { editProduct, fetchProductById } from "../services/services";
+import { editProduct } from "../services/services";
 // import { getAndSaveInputToSession } from "../utils/product";
 
 import { Button, Modal, Form, Input, InputNumber } from "antd";
@@ -21,38 +20,50 @@ import { Spin } from "antd";
 import { useProductQuery } from "../hooks/useProductQuery";
 
 const ProductModal = ({ text, onSubmit, productId }) => {
-  console.log(productId);
   const isFetching = useIsFetching({ queryKey: ["product"] });
   // const tempProduct = getAndSaveInputToSession(product);
   const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   //hooks
-  const { data, isSuccess, isPending, error } = useProductQuery(productId);
- 
-  console.log(data);
+  const { data, isSuccess, isPending, error } = useProductQuery(
+    productId,
+    queryClient
+  );
+
   useEffect(() => {
     form.setFieldsValue({
       title: data?.title,
+      brand: data?.brand,
       description: data?.description,
       category: data?.category,
       price: data?.price,
+      stock: data?.stock,
     });
   }, [form, data]);
 
   const mutation = useMutation({
-    mutationFn: (temp) => {
-      onSubmit(temp);
+    mutationFn: async (temp) => {
+      await onSubmit(temp);
       sessionStorage.removeItem("product");
     },
 
-    onSuccess: () => {
-      console.log("mutated");
-      console.log("success");
+    onSuccess: async () => {
+      // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+      // await delay(1000);
+      // //!Artificially delayed^
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["product", productId],
+      });
     },
+    // onSettled: () => {
+    //   queryClient.invalidateQueries({
+    //     queryKey: ["products"],
+    //   });
+    // },
   });
 
   const handleOk = () => {
@@ -74,7 +85,7 @@ const ProductModal = ({ text, onSubmit, productId }) => {
     if (onSubmit === editProduct) {
       temp.id = data?.id;
     }
-    console.log(temp);
+
     temp.price = parseFloat(values.price);
     mutation.mutate(temp);
     setIsModalOpen(false);
@@ -83,21 +94,21 @@ const ProductModal = ({ text, onSubmit, productId }) => {
   return (
     <>
       <Suspense fallback={<Loading />}>
-        <Spin size="medium" spinning={isFetching} tip="Fetching data...">
-          <Modal
-            title={text}
-            open={isModalOpen}
-            onOk={handleOk}
-            onCancel={handleCancel}
-            footer={[
-              <Button key="back" onClick={handleCancel}>
-                Return
-              </Button>,
-              <Button key="submit" type="primary" onClick={handleModalSubmit}>
-                Submit
-              </Button>,
-            ]}
-          >
+        <Modal
+          title={text}
+          open={isModalOpen}
+          onOk={handleOk}
+          onCancel={handleCancel}
+          footer={[
+            <Button key="back" onClick={handleCancel}>
+              Return
+            </Button>,
+            <Button key="submit" type="primary" onClick={handleModalSubmit}>
+              Submit
+            </Button>,
+          ]}
+        >
+          <Spin size="medium" spinning={isFetching} tip="Fetching data...">
             <Form
               initialValues={{
                 title: data?.title,
@@ -121,39 +132,30 @@ const ProductModal = ({ text, onSubmit, productId }) => {
               autoComplete="off"
             >
               <Form.Item
-                shouldUpdate
                 label="Title"
                 name="title"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your title",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please input your title" }]}
               >
                 <Input />
               </Form.Item>
-
               <Form.Item
-                shouldUpdate={(prevValues, curValues) =>
-                  prevValues.description !== curValues.description
-                }
+                label="Brand"
+                name="brand"
+                rules={[{ required: true, message: "Please input your brand" }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
                 label="Description"
                 name="description"
                 rules={[
-                  {
-                    required: true,
-                    message: "Please input your description",
-                  },
+                  { required: true, message: "Please input your description" },
                 ]}
               >
                 <TextArea rows={4} />
               </Form.Item>
 
               <Form.Item
-                shouldUpdate={(prevValues, curValues) =>
-                  prevValues.category !== curValues.category
-                }
                 label="Category"
                 name="category"
                 rules={[
@@ -165,31 +167,25 @@ const ProductModal = ({ text, onSubmit, productId }) => {
               >
                 <Input />
               </Form.Item>
-
               <Form.Item
-                shouldUpdate={(prevValues, curValues) =>
-                  prevValues.price !== curValues.price
-                }
+                label="Stock"
+                name="stock"
+                rules={[{ required: true, message: "Please input your stock" }]}
+              >
+                <InputNumber min={0} />
+              </Form.Item>
+              <Form.Item
                 label="Price"
                 name="price"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your price",
-                  },
-                ]}
+                rules={[{ required: true, message: "Please input your price" }]}
               >
                 {/* <Input /> */}
 
                 <InputNumber
-                  style={{
-                    width: 200,
-                  }}
-                  // defaultValue="1"
+                  style={{ width: 200 }}
                   min="0"
                   max="1000000000"
                   step="0.01"
-                  // onChange={onChange}
                   stringMode
                 />
               </Form.Item>
@@ -206,8 +202,8 @@ const ProductModal = ({ text, onSubmit, productId }) => {
                 </Button>
               </Form.Item>
             </Form>
-          </Modal>
-        </Spin>
+          </Spin>
+        </Modal>
       </Suspense>
     </>
   );

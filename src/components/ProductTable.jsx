@@ -11,6 +11,7 @@ import { memo, lazy, forwardRef } from "react";
 import {
   deleteProductById,
   editProduct,
+  fetchProductById,
   fetchProductsInCategoryWithPagination,
 } from "../services/services";
 
@@ -23,6 +24,7 @@ import Loading from "./Loading";
 import { PropTypes } from "prop-types";
 import { Spin } from "antd";
 import { useProductsQuery } from "../hooks/useProductsQuery.js";
+import { Image } from "antd";
 
 //Todo: Implement react query's paginated option
 const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
@@ -86,8 +88,16 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
     },
   });
 
+  const prefetch = (productId) => {
+    queryClient.prefetchQuery({
+      queryKey: ["product", productId],
+      queryFn: () => fetchProductById(productId),
+      staleTime: 60000,
+    });
+  };
+
   const handleTableChange = (pagination) => {
-    console.log("🚀 ~ handleTableChange ~ pagination:", pagination);
+    // console.log("🚀 ~ handleTableChange ~ pagination:", pagination);
     setTableParams({
       pagination: {
         ...pagination,
@@ -103,7 +113,6 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
 
   const handleEdit = (id) => {
     //Todo:use more appropriate name
-    console.log(data?.items);
     setEditingProduct(data?.items.find((product) => product.id == id));
     setProductId(id);
     onModalSubmit.current = editProduct;
@@ -112,6 +121,12 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
 
   //table layout variable
   const columns = [
+    {
+      title: "thumbnail",
+      dataIndex: "thumbnail",
+      key: "thumbnail",
+      render: (thumbnail) => <Image src={thumbnail} />,
+    },
     {
       title: "id",
       dataIndex: "id",
@@ -147,6 +162,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
             onClick={() => {
               handleEdit(product.id);
             }}
+            onMouseEnter={() => prefetch(product.id)}
           >
             Edit
           </a>
@@ -169,7 +185,6 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       ),
     },
   ];
-  console.log(isPending);
   return (
     <>
       <Suspense fallback={<Loading />}>

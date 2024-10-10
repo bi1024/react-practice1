@@ -64,7 +64,6 @@ export const fetchProductsInCategoryWithPagination = async (
     }
 
     const result = await response.json();
-    console.log(result);
     // Fetch total count separately
     const countResponse = await fetch(
       `${apiUrl}/products${category ? `?category=${category}` : ''}`
@@ -75,9 +74,9 @@ export const fetchProductsInCategoryWithPagination = async (
     const allItems = await countResponse.json();
     const totalCount = allItems.length;
 
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    await delay(1000);
-    //!Artificially delayed^
+    // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    // await delay(1000);
+    // //!Artificially delayed^
 
     return {
       items: result,
@@ -104,6 +103,9 @@ export const fetchProductById = async (id) => {
       throw new Error("Network response was not ok");
     }
     let result = await response.json()
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await delay(1000);
+    //!Artificially delayed^
     return result;
   } catch (error) {
     console.log(`Error: ${error}`);
