@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useIsFetching,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import { useState, useEffect, useImperativeHandle, useContext } from "react";
 
 import { memo, lazy, forwardRef } from "react";
@@ -15,6 +21,8 @@ const ProductModal = lazy(() => import("../components/ProductModal.jsx"));
 import Loading from "./Loading";
 
 import { PropTypes } from "prop-types";
+import { Spin } from "antd";
+import { useProductsQuery } from "../hooks/useProductsQuery.js";
 
 //Todo: Implement react query's paginated option
 const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
@@ -22,6 +30,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
   const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
 
   const [editingProduct, setEditingProduct] = useState({});
+  const [productId, setProductId] = useState("");
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -29,24 +38,20 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       total: 0,
     },
   });
+  const isFetching = useIsFetching({ queryKey: ["products"] });
 
-  const { data, isSuccess } = useQuery({
-    queryKey: ["products", filterCategory, tableParams.pagination],
-    queryFn: () => {
-      return fetchProductsInCategoryWithPagination(
-        filterCategory,
-        tableParams.pagination.current,
-        10
-      );
-    },
-    initialData: [], //for not reading empty data
-  });
+  const { data, isSuccess, isPending, error } = useProductsQuery(
+    filterCategory,
+    tableParams.pagination.current,
+    tableParams.pagination.pageSize
+  );
 
   useImperativeHandle(
     ref,
     () => {
       return {
         setEditingProduct,
+        setProductId,
       };
     },
     []
@@ -58,25 +63,13 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
         ...prevParams,
         pagination: {
           ...prevParams.pagination,
-          total: data.headers, // Assuming totalCount comes from server (header or response)
+          current: data.page,
+          pageSize: data.limit,
+          total: data.totalCount,
         },
       }));
     }
-  }, [isSuccess, data]); //updating pagination
-
-  useEffect(() => {
-    console.log("a");
-    if (isSuccess && data && data.headers !== tableParams.pagination.total) {
-      console.log("ab");
-      setTableParams((prevParams) => ({
-        ...prevParams,
-        pagination: {
-          ...prevParams.pagination,
-          total: data.headers, // Only update if the total has changed
-        },
-      }));
-    }
-  }, [isSuccess, data, tableParams.pagination.total]);
+  }, [isSuccess, data]);
 
   const queryClient = useQueryClient();
 
@@ -94,11 +87,14 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
   });
 
   const handleTableChange = (pagination) => {
+    console.log("🚀 ~ handleTableChange ~ pagination:", pagination);
     setTableParams({
-      pagination,
+      pagination: {
+        ...pagination,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+      },
     });
-
-    console.log(pagination);
   };
 
   const handleDelete = (id) => {
@@ -107,8 +103,9 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
 
   const handleEdit = (id) => {
     //Todo:use more appropriate name
-    console.log(data.result);
-    setEditingProduct(data.result.find((product) => product.id == id));
+    console.log(data?.items);
+    setEditingProduct(data?.items.find((product) => product.id == id));
+    setProductId(id);
     onModalSubmit.current = editProduct;
     setIsModalOpen(true);
   };
@@ -172,27 +169,41 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       ),
     },
   ];
-
+  console.log(isPending);
   return (
     <>
       <Suspense fallback={<Loading />}>
         {isModalOpen && (
           <Suspense>
             <ProductModal
+              productId={productId}
               text="Add a product"
               onSubmit={onModalSubmit.current}
               product={editingProduct}
             ></ProductModal>
           </Suspense>
         )}
-        <Table
-          columns={columns}
-          dataSource={data.result}
-          onChange={handleTableChange}
-          rowKey="id"
-          pagination={tableParams.pagination}
-          //rowKey to temporarily suppress react key warning ^
-        />
+        <Spin size="medium" spinning={isFetching} tip="Fetching data...">
+          <Table
+            columns={columns}
+            dataSource={[...(data?.items || [])]}
+            onChange={handleTableChange}
+            rowKey={(record) => record.id}
+            pagination={{
+              current: tableParams.pagination.current,
+              pageSize: tableParams.pagination.pageSize,
+              total: tableParams.pagination.total,
+              position: ["topRight", "bottomRight"],
+              pageSizeOptions: [5, 10, 20, 50, 100],
+              showSizeChanger: true,
+              showTotal: (total, range) => (
+                <b>{`showing ${range[0]}-${range[1]} of ${total} entries`}</b>
+              ),
+              size: "small",
+            }}
+            //rowKey to temporarily suppress react key warning ^
+          />
+        </Spin>
       </Suspense>
     </>
   );

@@ -16,6 +16,7 @@ const ProductLayout = lazy(() => import("../layout/ProductLayout.jsx"));
 const DropdownSelect = lazy(() => import("../components/DropdownSelect.jsx"));
 
 function ProductDashboard() {
+
   let onModalSubmit = useRef(addProduct); //to persist between renders
   const { setIsModalOpen } = useContext(ModalContext);
 
@@ -27,6 +28,7 @@ function ProductDashboard() {
     onModalSubmit.current = addProduct;
     // setEditingProduct({});
     ref.current.setEditingProduct({});
+    ref.current.setProductId('');
     setIsModalOpen(true);
   };
 
@@ -34,7 +36,8 @@ function ProductDashboard() {
     <>
       <ProductLayout>
         <Flex justify="flex-end">
-          <Space>
+        
+          <Space >
             <DropdownSelect
             // categories={categories}
             // handleFilterChoice={handleFilterChoice}

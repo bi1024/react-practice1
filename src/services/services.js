@@ -49,52 +49,52 @@ export const fetchProductsInCategory = async (category) => {
   }
 }
 
-// export const fetchProductsInCategoryWithPagination = async (category, page, limit) => {
-//   try {
-//     if (category && category.length > 0) {
-//       const response = await fetch(`${apiUrl}/products?category=${category}&_page=${page}&_limit=${limit}`);
-//       if (!response.ok) {
-//         throw new Error("Network response was not ok");
-//       }
-//       let result = await response.json()
-//       return {data:result};
-//     } else {
-//       const response = await fetch(`${apiUrl}/products?_page=${page}&_limit=${limit}`);
-//       if (!response.ok) {
-//         throw new Error("Network response was not ok");
-//       }
-//       let result = await response.json()
-//       return result;
-//     }
-//   } catch (error) {
-//     console.log(`Error: ${error}`);
-//     return [];//ensure no reading of undefined => page isn't borked
-//   }
-// }
-export const fetchProductsInCategoryWithPagination = async (category, page, limit) => {
+export const fetchProductsInCategoryWithPagination = async (
+  category,
+  page,
+  limit
+) => {
   try {
-    if (category && category.length > 0) {
-      const response = await fetch(`${apiUrl}/products?category=${category}&_page=${page}&_limit=${limit}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      let headers = response.headers.get("x-total-count");
-      let result = await response.json()
-      return { result: result, headers: headers };
-    } else {
-      const response = await fetch(`${apiUrl}/products?_page=${page}&_limit=${limit}`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      let headers = response.headers.get("x-total-count");
-      let result = await response.json()
-      return { result: result, headers: headers };
+    const baseURL = `${apiUrl}/products?_page=${page}&_limit=${limit}${category ? `&category=${category}` : ''
+      }`;
+
+    const response = await fetch(baseURL);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+
+    const result = await response.json();
+    console.log(result);
+    // Fetch total count separately
+    const countResponse = await fetch(
+      `${apiUrl}/products${category ? `?category=${category}` : ''}`
+    );
+    if (!countResponse.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const allItems = await countResponse.json();
+    const totalCount = allItems.length;
+
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await delay(1000);
+    //!Artificially delayed^
+
+    return {
+      items: result,
+      totalCount: totalCount,
+      page: page,
+      limit: limit,
+    };
   } catch (error) {
-    console.log(`Error: ${error}`);
-    return [];//ensure no reading of undefined => page isn't borked
+    console.error(`Error: ${error}`);
+    return {
+      items: [],
+      totalCount: 0,
+      page: page,
+      limit: limit,
+    };
   }
-}
+};
 
 export const fetchProductById = async (id) => {
   try {
