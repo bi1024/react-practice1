@@ -7,12 +7,10 @@ import {
 
 import { memo } from "react";
 import { editProduct } from "../services/services";
-// import { getAndSaveInputToSession } from "../utils/product";
 
 import { Button, Modal, Form, Input, InputNumber } from "antd";
 const { TextArea } = Input;
 import { Suspense } from "react";
-import Loading from "./Loading";
 
 import { PropTypes } from "prop-types";
 import { Spin } from "antd";
@@ -21,8 +19,6 @@ import useStoreBase from "../store";
 
 const ProductModal = ({ text, onSubmit, productId }) => {
   const isFetching = useIsFetching({ queryKey: ["product"] });
-  // const tempProduct = getAndSaveInputToSession(product);
-  // const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const isModalOpen = useStoreBase.use.isModalOpen();
   const closeModal = useStoreBase.use.closeModal();
   const [form] = Form.useForm();
@@ -88,7 +84,7 @@ const ProductModal = ({ text, onSubmit, productId }) => {
 
   return (
     <>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Spin/>}>
         <Modal
           title={text}
           open={isModalOpen}

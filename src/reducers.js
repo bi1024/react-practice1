@@ -1,5 +1,5 @@
 //done only for demonstration purposes, app is too simple for any meaningful useReducer usage
-
+//!unused
 export function filterCategoryReducer(filterCategory, action) {
   switch (action.type) {
     case 'changed': {

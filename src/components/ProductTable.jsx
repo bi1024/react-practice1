@@ -96,7 +96,6 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
   };
 
   const handleTableChange = (pagination) => {
-    console.log("🚀 ~ handleTableChange ~ pagination:", pagination);
     setTableParams({
       pagination: {
         ...pagination,
