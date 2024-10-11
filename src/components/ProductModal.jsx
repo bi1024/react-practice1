@@ -77,6 +77,8 @@ const ProductModal = ({ text, onSubmit, productId }) => {
       if (confirm("Closing the modal will delete input changes")) {
         closeModal();
       }
+    } else {
+      closeModal();
     }
   };
 
