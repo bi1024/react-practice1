@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { fetchProductsInCategoryWithPagination } from "../services/services";
 
 export const useProductsQuery = (filterCategory, current, pageSize) => {
@@ -15,7 +15,7 @@ export const useProductsQuery = (filterCategory, current, pageSize) => {
         current,
         pageSize
       ),
-    placeholderData:  (previousData) => previousData,
+    placeholderData: (previousData) => previousData,
     gcTime: 15 * 60 * 60,
     staleTime: 5 * 60 * 60,
   });

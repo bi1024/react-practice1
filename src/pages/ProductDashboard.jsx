@@ -8,17 +8,15 @@ import { addProduct } from "../services/services.js";
 // import { filterCategoryReducer } from "../reducers.js";
 
 import { memo } from "react";
-import { ModalContext } from "../context.js";
-import { useContext } from "react";
+import useStoreBase from "../store.js";
 
 const ProductTable = lazy(() => import("../components/ProductTable.jsx"));
 const ProductLayout = lazy(() => import("../layout/ProductLayout.jsx"));
 const DropdownSelect = lazy(() => import("../components/DropdownSelect.jsx"));
 
 function ProductDashboard() {
-
   let onModalSubmit = useRef(addProduct); //to persist between renders
-  const { setIsModalOpen } = useContext(ModalContext);
+  const openModal = useStoreBase.use.openModal();
 
   const ref = useRef(null);
 
@@ -28,19 +26,16 @@ function ProductDashboard() {
     onModalSubmit.current = addProduct;
     // setEditingProduct({});
     ref.current.setEditingProduct({});
-    ref.current.setProductId('');
-    setIsModalOpen(true);
+    ref.current.setProductId("");
+    openModal();
   };
 
   return (
     <>
       <ProductLayout>
         <Flex justify="flex-end">
-        
-          <Space >
+          <Space>
             <DropdownSelect
-            // categories={categories}
-            // handleFilterChoice={handleFilterChoice}
             />
             <Button onClick={handleAddProductClick}>Add a product</Button>
           </Space>

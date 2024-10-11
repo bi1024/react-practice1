@@ -30,12 +30,6 @@ const ProductPage = () => {
         onSubmit={editProduct}
       ></ProductInfoPanel>
     </ProductLayout>
-    // <div>
-    //   ProductPage{productId}
-    //   <div>{data.id}</div>
-
-    //   <div>{data.title}</div>
-    // </div>
   );
 };
 

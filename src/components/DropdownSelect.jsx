@@ -1,18 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
-import { useContext } from "react";
 
 import { memo } from "react";
 import { fetchCategories } from "../services/services";
 
-import { Select } from "antd";
-import Loading from "./Loading";
+import { Select, Spin } from "antd";
 import { Suspense } from "react";
 
-import { CategoryContext } from "../context";
 import { PropTypes } from "prop-types";
+import useStoreBase from "../store";
 
 const DropdownSelect = () => {
-  const { dispatch } = useContext(CategoryContext);
+  // const { dispatch } = useContext(CategoryContext);
+  const changed = useStoreBase.use.changed();
 
   //!Static categories, does not change on adding to products
   const { data: categories } = useQuery({
@@ -26,7 +25,7 @@ const DropdownSelect = () => {
     categoriesList.push({ label: category.name, value: category.name })
   );
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<Spin />}>
       <Select
         allowClear
         defaultValue=""
@@ -34,7 +33,7 @@ const DropdownSelect = () => {
           width: 120,
         }}
         onChange={(value) => {
-          dispatch({ type: "changed", filterCategory: value });
+          changed(value);
         }}
         options={categoriesList}
       />

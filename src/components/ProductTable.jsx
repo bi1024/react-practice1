@@ -1,35 +1,34 @@
 import {
   useIsFetching,
   useMutation,
-  useQuery,
   useQueryClient,
-  keepPreviousData,
 } from "@tanstack/react-query";
-import { useState, useEffect, useImperativeHandle, useContext } from "react";
+import { useState, useEffect, useImperativeHandle } from "react";
 
 import { memo, lazy, forwardRef } from "react";
 import {
   deleteProductById,
   editProduct,
   fetchProductById,
-  fetchProductsInCategoryWithPagination,
 } from "../services/services";
 
 import { Suspense } from "react";
 import { Space, Table } from "antd";
-import { CategoryContext, ModalContext } from "../context";
 const ProductModal = lazy(() => import("../components/ProductModal.jsx"));
-import Loading from "./Loading";
 
 import { PropTypes } from "prop-types";
 import { Spin } from "antd";
 import { useProductsQuery } from "../hooks/useProductsQuery.js";
 import { Image } from "antd";
+import useStoreBase from "../store.js";
 
-//Todo: Implement react query's paginated option
+//Todo: Change to using antd's table sorting so that sorting triggers table change => triggers refetch
 const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
-  const { filterCategory } = useContext(CategoryContext);
-  const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+  // const { filterCategory } = useContext(CategoryContext);
+  const filterCategory = useStoreBase.use.category();
+  // const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+  const isModalOpen = useStoreBase.use.isModalOpen();
+  const openModal = useStoreBase.use.openModal();
 
   const [editingProduct, setEditingProduct] = useState({});
   const [productId, setProductId] = useState("");
@@ -97,7 +96,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
   };
 
   const handleTableChange = (pagination) => {
-    // console.log("🚀 ~ handleTableChange ~ pagination:", pagination);
+    console.log("🚀 ~ handleTableChange ~ pagination:", pagination);
     setTableParams({
       pagination: {
         ...pagination,
@@ -116,7 +115,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
     setEditingProduct(data?.items.find((product) => product.id == id));
     setProductId(id);
     onModalSubmit.current = editProduct;
-    setIsModalOpen(true);
+    openModal();
   };
 
   //table layout variable
@@ -187,7 +186,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
   ];
   return (
     <>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Spin />}>
         {isModalOpen && (
           <Suspense>
             <ProductModal

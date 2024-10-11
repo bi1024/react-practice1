@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 import {
   useIsFetching,
   useMutation,
@@ -14,15 +14,17 @@ const { TextArea } = Input;
 import { Suspense } from "react";
 import Loading from "./Loading";
 
-import { ModalContext } from "../context";
 import { PropTypes } from "prop-types";
 import { Spin } from "antd";
 import { useProductQuery } from "../hooks/useProductQuery";
+import useStoreBase from "../store";
 
 const ProductModal = ({ text, onSubmit, productId }) => {
   const isFetching = useIsFetching({ queryKey: ["product"] });
   // const tempProduct = getAndSaveInputToSession(product);
-  const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+  // const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+  const isModalOpen = useStoreBase.use.isModalOpen();
+  const closeModal = useStoreBase.use.closeModal();
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
   //hooks
@@ -49,9 +51,7 @@ const ProductModal = ({ text, onSubmit, productId }) => {
     },
 
     onSuccess: async () => {
-      // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-      // await delay(1000);
-      // //!Artificially delayed^
+
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });
@@ -59,25 +59,20 @@ const ProductModal = ({ text, onSubmit, productId }) => {
         queryKey: ["product", productId],
       });
     },
-    // onSettled: () => {
-    //   queryClient.invalidateQueries({
-    //     queryKey: ["products"],
-    //   });
-    // },
   });
 
   const handleOk = () => {
     form.submit();
-    setIsModalOpen(false);
+    closeModal();
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    closeModal();
   };
 
   const handleModalSubmit = () => {
     form.submit();
-    setIsModalOpen(false);
+    closeModal();
   };
 
   const onFinish = (values) => {
@@ -88,7 +83,7 @@ const ProductModal = ({ text, onSubmit, productId }) => {
 
     temp.price = parseFloat(values.price);
     mutation.mutate(temp);
-    setIsModalOpen(false);
+    closeModal();
   };
 
   return (
@@ -128,7 +123,6 @@ const ProductModal = ({ text, onSubmit, productId }) => {
                 maxWidth: 600,
               }}
               onFinish={onFinish}
-              // onValuesChange={onValuesChange}
               autoComplete="off"
             >
               <Form.Item
