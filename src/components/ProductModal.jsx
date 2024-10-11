@@ -47,7 +47,6 @@ const ProductModal = ({ text, onSubmit, productId }) => {
     },
 
     onSuccess: async () => {
-
       queryClient.invalidateQueries({
         queryKey: ["products"],
       });
@@ -63,7 +62,22 @@ const ProductModal = ({ text, onSubmit, productId }) => {
   };
 
   const handleCancel = () => {
-    closeModal();
+    let temp = form.getFieldsValue([
+      "title",
+      "brand",
+      "description",
+      "category",
+      "stock",
+      "price",
+    ]);
+    console.log(temp);
+    let tempKeys = Object.keys(temp);
+    console.log(tempKeys);
+    if (tempKeys.some((element) => temp[element] != data[element])) {
+      if (confirm("Closing the modal will delete input changes")) {
+        closeModal();
+      }
+    }
   };
 
   const handleModalSubmit = () => {
@@ -84,7 +98,7 @@ const ProductModal = ({ text, onSubmit, productId }) => {
 
   return (
     <>
-      <Suspense fallback={<Spin/>}>
+      <Suspense fallback={<Spin />}>
         <Modal
           title={text}
           open={isModalOpen}
