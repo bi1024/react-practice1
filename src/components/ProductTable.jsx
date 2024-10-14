@@ -21,11 +21,14 @@ import { Spin } from "antd";
 import { useProductsQuery } from "../hooks/useProductsQuery.js";
 import { Image } from "antd";
 import useStoreBase from "../store.js";
+import { useCategoriesQuery } from "../hooks/useCategoriesQuery.js";
 
 //Todo: Change to using antd's table sorting so that sorting triggers table change => triggers refetch
 const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
   // const { filterCategory } = useContext(CategoryContext);
   const filterCategory = useStoreBase.use.category();
+  const { data: categories } = useCategoriesQuery();
+  const changed = useStoreBase.use.changed();
   // const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const isModalOpen = useStoreBase.use.isModalOpen();
   const openModal = useStoreBase.use.openModal();
@@ -95,7 +98,13 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
     });
   };
 
-  const handleTableChange = (pagination) => {
+  const handleTableChange = (pagination, filters) => {
+    // console.log(
+    //   "Various parameters",
+    //   pagination,
+    //   filters ? filters : "",
+    // );
+    changed(filters.category ? filters.category[0] : "");
     setTableParams({
       pagination: {
         ...pagination,
@@ -145,6 +154,8 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       title: "Category",
       key: "category",
       dataIndex: "category",
+      filters: categories,
+      filterMultiple: false,
     },
     {
       title: "Price",

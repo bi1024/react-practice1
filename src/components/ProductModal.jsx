@@ -70,9 +70,8 @@ const ProductModal = ({ text, onSubmit, productId }) => {
       "stock",
       "price",
     ]);
-    console.log(temp);
+
     let tempKeys = Object.keys(temp);
-    console.log(tempKeys);
     if (tempKeys.some((element) => temp[element] != data[element])) {
       if (confirm("Closing the modal will delete input changes")) {
         closeModal();

@@ -17,7 +17,7 @@ const createSelectors = (_store) => {
 const useStoreBase = createSelectors(create((set) => ({
   category: '',
   isModalOpen: false,
-  changed: (newCategory) => set(() => ({ category: newCategory })),
+  changed: (newCategory) => { set({ category: newCategory }) },
   openModal: () => set({ isModalOpen: true }),
   closeModal: () => set({ isModalOpen: false }),
 })));

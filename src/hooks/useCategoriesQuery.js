@@ -6,9 +6,9 @@ export const useCategoriesQuery = () => {
   const { data, isSuccess, isPending, error } = useQuery({
     queryKey: ["categories"],
     queryFn: () => fetchCategories(),
-    select:(data)=>{
+    select: (data) => {
       return data.map((category) =>
-        ({ label: category.name, value: category.name })
+        ({ text: category.name, value: category.name })
       );
     },
     // initialData: [], //for not reading empty data

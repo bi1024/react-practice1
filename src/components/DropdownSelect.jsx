@@ -14,7 +14,6 @@ const DropdownSelect = () => {
   //!Static categories, does not change on adding to products
   const { data, isSuccess, isPending, error } = useCategoriesQuery();
 
-  
   return (
     <Suspense fallback={<Spin />}>
       <Select
