@@ -4,6 +4,7 @@ import { createBrowserRouter } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 
 import ProductDashboard from "./pages/ProductDashboard.jsx";
+import TestPage from "./pages/TestPage.jsx";
 // import ProductPage from "./pages/ProductPage.jsx";
 
 const router = createBrowserRouter([
@@ -15,9 +16,9 @@ const router = createBrowserRouter([
     path: "products/",
     element: <ProductDashboard />,
   },
-  // {
-  //   path: "products/:productId",
-  //   element: <ProductPage />,
-  // },
+  {
+    path: "testing/",
+    element: <TestPage />,
+  },
 ]);
 export default router;

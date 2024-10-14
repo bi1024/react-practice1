@@ -6,9 +6,13 @@ import { Menu, Layout } from "antd";
 const { Sider } = Layout;
 import { ShopOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import useStoreBase from "../store";
 
 const ProductSider = () => {
   const navigate = useNavigate();
+  const selectedMenu = useStoreBase.use.selectedMenu();
+
+  const changeMenu = useStoreBase.use.changeMenu();
   const siderStyle = {
     overflow: "auto",
     height: "100vh",
@@ -20,16 +24,15 @@ const ProductSider = () => {
     scrollbarColor: "unset",
   };
   const onSelect = (item) => {
-    console.log(item);
+    changeMenu(item);
+
     if (item.key === "i1") {
-      navigate("/products");
+      navigate("/products/");
+    } else {
+      navigate("/testing");
     }
   };
-  // const items = [ShopOutlined].map((icon, index) => ({
-  //   key: String(index + 1),
-  //   icon: React.createElement(icon),
-  //   label: `Products`,
-  // }));
+
   const items = [
     {
       key: "i1",
@@ -38,6 +41,7 @@ const ProductSider = () => {
     },
     {
       key: "i2",
+      icon: <ShopOutlined />,
       label: "Testing",
     },
   ];
@@ -48,7 +52,7 @@ const ProductSider = () => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={["i1"]}
+        selectedKeys={selectedMenu}
         items={items}
         onSelect={onSelect}
       />

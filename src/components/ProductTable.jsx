@@ -25,11 +25,10 @@ import { useCategoriesQuery } from "../hooks/useCategoriesQuery.js";
 
 //Todo: Change to using antd's table sorting so that sorting triggers table change => triggers refetch
 const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
-  // const { filterCategory } = useContext(CategoryContext);
+  const isFetching = useIsFetching({ queryKey: ["products"] });
+
   const filterCategory = useStoreBase.use.category();
-  const { data: categories } = useCategoriesQuery();
   const changed = useStoreBase.use.changed();
-  // const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
   const isModalOpen = useStoreBase.use.isModalOpen();
   const openModal = useStoreBase.use.openModal();
 
@@ -41,13 +40,16 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       pageSize: 10,
       total: 0,
     },
+    sorter: {},
   });
-  const isFetching = useIsFetching({ queryKey: ["products"] });
+
+  const { data: categories } = useCategoriesQuery();
 
   const { data, isSuccess, isPending, error } = useProductsQuery(
     filterCategory,
     tableParams.pagination.current,
-    tableParams.pagination.pageSize
+    tableParams.pagination.pageSize,
+    tableParams.sorter
   );
 
   useImperativeHandle(
@@ -97,19 +99,17 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       staleTime: 60000,
     });
   };
+  const handleTableChange = (pagination, filters, sorter) => {
 
-  const handleTableChange = (pagination, filters) => {
-    // console.log(
-    //   "Various parameters",
-    //   pagination,
-    //   filters ? filters : "",
-    // );
     changed(filters.category ? filters.category[0] : "");
     setTableParams({
       pagination: {
         ...pagination,
         current: pagination.current,
         pageSize: pagination.pageSize,
+      },
+      sorter: {
+        ...sorter,
       },
     });
   };
@@ -138,7 +138,6 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       title: "id",
       dataIndex: "id",
       key: "id",
-      // render: (text) => <a>{text}</a>,
     },
     {
       title: "Title",
@@ -161,6 +160,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      sorter: true,
     },
     {
       title: "Action",
@@ -194,6 +194,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
       ),
     },
   ];
+
   return (
     <>
       <Suspense fallback={<Spin />}>

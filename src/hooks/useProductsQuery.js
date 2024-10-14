@@ -1,19 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchProductsInCategoryWithPagination } from "../services/services";
+import { fetchProducts, fetchProductsInCategoryWithPagination } from "../services/services";
 
-export const useProductsQuery = (filterCategory, current, pageSize) => {
+export const useProductsQuery = (filterCategory, current, pageSize, sorter) => {
+  let order = ''
+  if (sorter.columnKey === 'price') {
+    if (sorter.order) {
+      order = sorter.order === 'ascend' ? 'asc' : 'desc';
+    }
+  }
+
   const { data, isSuccess, isPending, error } = useQuery({
     queryKey: [
       "products",
       filterCategory,
       current,
       pageSize,
+      order
     ],
     queryFn: () =>
-      fetchProductsInCategoryWithPagination(
+      fetchProducts(
         filterCategory,
         current,
-        pageSize
+        pageSize,
+        order
       ),
     placeholderData: (previousData) => previousData,
     gcTime: 15 * 60 * 60,
