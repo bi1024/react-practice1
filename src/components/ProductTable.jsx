@@ -13,7 +13,7 @@ import {
 } from "../services/services";
 
 import { Suspense } from "react";
-import { Space, Table } from "antd";
+import { Skeleton, Space, Table } from "antd";
 const ProductModal = lazy(() => import("../components/ProductModal.jsx"));
 
 import { PropTypes } from "prop-types";
@@ -23,7 +23,6 @@ import { Image } from "antd";
 import useStoreBase from "../store.js";
 import { useCategoriesQuery } from "../hooks/useCategoriesQuery.js";
 
-//Todo: Change to using antd's table sorting so that sorting triggers table change => triggers refetch
 const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
   const isFetching = useIsFetching({ queryKey: ["products"] });
 
@@ -100,7 +99,7 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
     });
   };
   const handleTableChange = (pagination, filters, sorter) => {
-
+    console.log(pagination);
     changed(filters.category ? filters.category[0] : "");
     setTableParams({
       pagination: {
@@ -209,25 +208,27 @@ const ProductTable = forwardRef(({ onModalSubmit }, ref) => {
           </Suspense>
         )}
         <Spin size="medium" spinning={isFetching} tip="Fetching data...">
-          <Table
-            columns={columns}
-            dataSource={[...(data?.items || [])]}
-            onChange={handleTableChange}
-            rowKey={(record) => record.id}
-            pagination={{
-              current: tableParams.pagination.current,
-              pageSize: tableParams.pagination.pageSize,
-              total: tableParams.pagination.total,
-              position: ["topRight", "bottomRight"],
-              pageSizeOptions: [5, 10, 20, 50, 100],
-              showSizeChanger: true,
-              showTotal: (total, range) => (
-                <b>{`showing ${range[0]}-${range[1]} of ${total} entries`}</b>
-              ),
-              size: "small",
-            }}
-            //rowKey to temporarily suppress react key warning ^
-          />
+          <Skeleton loading={isPending}>
+            <Table
+              columns={columns}
+              dataSource={[...(data?.items || [])]}
+              onChange={handleTableChange}
+              rowKey={(record) => record.id}
+              pagination={{
+                current: tableParams.pagination.current,
+                pageSize: tableParams.pagination.pageSize,
+                total: tableParams.pagination.total,
+                position: ["topRight", "bottomRight"],
+                pageSizeOptions: [5, 10, 20, 50, 100],
+                showSizeChanger: true,
+                showTotal: (total, range) => (
+                  <b>{`showing ${range[0]}-${range[1]} of ${total} entries`}</b>
+                ),
+                size: "small",
+              }}
+              //rowKey to temporarily suppress react key warning ^
+            />
+          </Skeleton>
         </Spin>
       </Suspense>
     </>

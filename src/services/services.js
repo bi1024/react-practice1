@@ -85,7 +85,11 @@ export const fetchProducts = async (
   priceSorter
 ) => {
   try {
-    const baseURL = `${apiUrl}/products?${page ? `&_page=${category}` : ''}${limit ? `&_limit=${category}` : ''}${category ? `&category=${category}` : ''}${priceSorter ? `&_sort=price&_order=${priceSorter}` : ''}`;
+    const baseURL = `${apiUrl}/products?/
+    ${page ? `&_page=${page}` : ''}/
+    ${limit ? `&_limit=${limit}` : ''}/
+    ${category ? `&category=${category}` : ''}/
+    ${priceSorter ? `&_sort=price&_order=${priceSorter}` : ''}`;
 
     const response = await fetch(baseURL);
     if (!response.ok) {
