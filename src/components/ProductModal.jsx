@@ -25,8 +25,7 @@ const ProductModal = ({ text, onSubmit, productId }) => {
   const queryClient = useQueryClient();
   //hooks
   const { data, isSuccess, isPending, error } = useProductQuery(
-    productId,
-    queryClient
+    productId
   );
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchProducts, fetchProductsInCategoryWithPagination } from "../services/services";
+import { fetchProducts } from "../services/services";
 
 export const useProductsQuery = (filterCategory, current, pageSize, sorter) => {
   let order = ''

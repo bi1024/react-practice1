@@ -5,8 +5,7 @@ export const useProductQuery = (productId) => {
   const { data, isSuccess, isPending, error } = useQuery({
     queryKey: ["product", productId],
     queryFn: () => fetchProductById(productId),
-    placeholderData: (previousData) => previousData,
-    initialData: {},//Prevent fetching on add modal
+    placeholderData: {},//Prevent fetching on add modal and reading undefined
 
     gcTime: 15 * 60 * 60,
     staleTime: 5 * 60 * 60,

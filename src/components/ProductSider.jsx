@@ -7,6 +7,7 @@ const { Sider } = Layout;
 import { ShopOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import useStoreBase from "../store";
+import { startTransition } from "react";
 
 const ProductSider = () => {
   const navigate = useNavigate();
@@ -27,9 +28,13 @@ const ProductSider = () => {
     changeMenu(item);
 
     if (item.key === "i1") {
-      navigate("/products/");
+      startTransition(() => {
+        navigate("/products/");
+      });
     } else {
-      navigate("/testing");
+      startTransition(() => {
+        navigate("/testing");
+      });
     }
   };
 
