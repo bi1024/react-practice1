@@ -1,10 +1,19 @@
 import React from "react";
+
 import { memo } from "react";
+
 import { Menu, Layout } from "antd";
 const { Sider } = Layout;
 import { ShopOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+import useStoreBase from "../store";
+import { startTransition } from "react";
 
 const ProductSider = () => {
+  const navigate = useNavigate();
+  const selectedMenu = useStoreBase.use.selectedMenu();
+
+  const changeMenu = useStoreBase.use.changeMenu();
   const siderStyle = {
     overflow: "auto",
     height: "100vh",
@@ -15,12 +24,32 @@ const ProductSider = () => {
     scrollbarWidth: "thin",
     scrollbarColor: "unset",
   };
+  const onSelect = (item) => {
+    changeMenu(item);
 
-  const items = [ShopOutlined].map((icon, index) => ({
-    key: String(index + 1),
-    icon: React.createElement(icon),
-    label: `nav ${index + 1}`,
-  }));
+    if (item.key === "i1") {
+      startTransition(() => {
+        navigate("/products/");
+      });
+    } else {
+      startTransition(() => {
+        navigate("/testing");
+      });
+    }
+  };
+
+  const items = [
+    {
+      key: "i1",
+      icon: <ShopOutlined />,
+      label: "Products",
+    },
+    {
+      key: "i2",
+      icon: <ShopOutlined />,
+      label: "Testing",
+    },
+  ];
 
   return (
     <Sider style={siderStyle}>
@@ -28,8 +57,9 @@ const ProductSider = () => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={["1"]}
+        selectedKeys={selectedMenu}
         items={items}
+        onSelect={onSelect}
       />
     </Sider>
   );

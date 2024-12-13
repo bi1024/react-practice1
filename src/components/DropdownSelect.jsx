@@ -1,24 +1,33 @@
-import { Select } from "antd";
-import { PropTypes } from "prop-types";
 import { memo } from "react";
 
-const DropdownSelect = ({ categories, handleFilterChoice }) => {
-  const categoriesList = [];
-  categories?.forEach((category) =>
-    categoriesList.push({ label: category, value: category })
-  );
+import { Select, Spin } from "antd";
+import { Suspense } from "react";
+
+import { PropTypes } from "prop-types";
+import useStoreBase from "../store";
+import { useCategoriesQuery } from "../hooks/useCategoriesQuery";
+
+const DropdownSelect = () => {
+  // const { dispatch } = useContext(CategoryContext);
+  const changed = useStoreBase.use.changed();
+
+  //!Static categories, does not change on adding to products
+  const { data, isSuccess, isPending, error } = useCategoriesQuery();
+
   return (
-    <Select
-      allowClear
-      defaultValue=""
-      style={{
-        width: 120,
-      }}
-      onChange={(value) => {
-        handleFilterChoice(value);
-      }}
-      options={categoriesList}
-    />
+    <Suspense fallback={<Spin />}>
+      <Select
+        allowClear
+        defaultValue=""
+        style={{
+          width: 120,
+        }}
+        onChange={(value) => {
+          changed(value);
+        }}
+        options={data}
+      />
+    </Suspense>
   );
 };
 
